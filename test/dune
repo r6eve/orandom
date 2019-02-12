@@ -1,0 +1,8 @@
+(executables
+ (names random)
+ (libraries orandom qcheck))
+
+(alias
+ (name runtest)
+ (deps random.exe)
+ (action (run %{deps} -q --color=always)))
