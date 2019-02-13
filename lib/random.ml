@@ -9,4 +9,18 @@
 
 module Random = struct
   let init () = "junk"
+
+  let set_seed _seed = assert false
+
+  let next_boolean () = assert false
+
+  let next_int () = assert false
+
+  let next_float () = assert false
+
+  let next_gaussian () = assert false
+
+  let ints () = assert false
+
+  let floats () = assert false
 end
