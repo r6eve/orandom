@@ -8,9 +8,11 @@
 (****************************************************************)
 
 module Random = struct
-  let init () = "junk"
-
   let set_seed _seed = assert false
+
+  let init () =
+    let milli_time = truncate @@ ( *. ) 1000. @@ Unix.gettimeofday () in
+    set_seed milli_time
 
   let next_boolean () = assert false
 

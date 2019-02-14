@@ -11,7 +11,7 @@ module Random : sig
   val init : unit -> string
   (** Create a new random number generator. *)
 
-  val set_seed : float -> unit
+  val set_seed : int -> unit
   (** Set the seed of the random number generator using the given seed. *)
 
   val next_boolean : unit -> bool
