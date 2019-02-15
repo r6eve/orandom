@@ -8,7 +8,7 @@
 (****************************************************************)
 
 module Random : sig
-  val init : unit -> string
+  val init : unit -> unit
   (** Create a new random number generator. *)
 
   val set_seed : int -> unit

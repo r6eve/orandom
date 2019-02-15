@@ -8,6 +8,13 @@
 (****************************************************************)
 
 module Random = struct
+  let seed = ref 0
+  (** TODO: use module [int64] *)
+
+  let next_next_gaussian_p = ref false
+
+  let next_gaussian_p = ref false
+
   let set_seed _seed = assert false
 
   let init () =
