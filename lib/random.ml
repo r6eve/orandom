@@ -9,13 +9,13 @@
 
 module Random = struct
   let seed = ref 0
-  (** TODO: use module [int64] *)
 
   let next_next_gaussian_p = ref false
 
   let next_gaussian_p = ref false
 
-  let set_seed _seed = assert false
+  let set_seed s =
+    seed := (lor) 0x5DEECE66D @@ (land) (1 lsl 48 - 1) @@ s
 
   let init () =
     let milli_time = truncate @@ ( *. ) 1000. @@ Unix.gettimeofday () in
