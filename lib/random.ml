@@ -8,9 +8,10 @@
 (****************************************************************)
 
 module Random = struct
+
   let soil = 0x5DEECE66DL
 
-  let seed = ref Int64.zero
+  let seed = ref 0L
 
   let _next_next_gaussian_p = ref false
 
@@ -18,9 +19,7 @@ module Random = struct
 
   let set_seed s =
     let module I = Int64 in
-    seed := I.logand (I.of_int (1 lsl 48 - 1)) @@ I.logor soil @@ I.of_int s;
-    seed := I.sub !seed I.one; (* TODO: *)
-    Printf.printf "%Ld\n" !seed
+    seed := I.logand (I.of_int (1 lsl 48 - 1)) @@ I.logxor soil @@ I.of_int s
 
   let init () =
     let milli_time = truncate @@ ( *. ) 1000. @@ Unix.gettimeofday () in
@@ -29,7 +28,6 @@ module Random = struct
   let next bits =
     let module I = Int64 in
     seed := I.logand (I.of_int (1 lsl 48 - 1)) @@ I.add 0xBL @@ I.mul soil !seed;
-    Printf.printf "%Ld\n" !seed;
     I.shift_right_logical !seed (48 - bits)
 
   let next_boolean () = next(1) <> Int64.zero
@@ -43,4 +41,5 @@ module Random = struct
   let ints () = assert false
 
   let floats () = assert false
+
 end
