@@ -15,15 +15,17 @@ module Random = struct
   let _next_gaussian_p = ref false
 
   let set_seed s =
-    seed := Int64.logand (Int64.of_int (1 lsl 48 - 1)) @@ Int64.logor 0x5DEECE66DL @@ Int64.of_int s
+    let module I = Int64 in
+    seed := I.logand (I.of_int (1 lsl 48 - 1)) @@ I.logor 0x5DEECE66DL @@ I.of_int s
 
   let init () =
     let milli_time = truncate @@ ( *. ) 1000. @@ Unix.gettimeofday () in
     set_seed milli_time
 
   let next bits =
-    seed := Int64.logand (Int64.of_int (1 lsl 48 - 1)) @@ Int64.add 0xBL @@ Int64.mul 0x5DEECE66DL @@ !seed;
-    Int64.shift_right_logical !seed (48 - bits)
+    let module I = Int64 in
+    seed := I.logand (I.of_int (1 lsl 48 - 1)) @@ I.add 0xBL @@ I.mul 0x5DEECE66DL !seed;
+    I.shift_right_logical !seed (48 - bits)
 
   let next_boolean () = next(1) <> Int64.zero
 
