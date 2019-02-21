@@ -30,7 +30,7 @@ module Random = struct
     seed := I.logand (I.of_int (1 lsl 48 - 1)) @@ I.add 0xBL @@ I.mul soil !seed;
     I.shift_right_logical !seed (48 - bits)
 
-  let next_boolean () = next(1) <> Int64.zero
+  let next_boolean () = next(1) <> 0L
 
   let next_int () = assert false
 

@@ -20,8 +20,8 @@ install:
   - opam install --yes dune qcheck
 
 script:
-  - make
-  - make test
+  - dune build
+  - dune runtest
 
 notifications:
   email:
