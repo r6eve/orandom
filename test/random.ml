@@ -9,9 +9,9 @@
 
 open Orandom.Random
 
-let delta = 1e-16
-
-let same_float_p a b = abs_float (a -. b) < delta
+let same_float_p a b =
+  let eps = 1e-16 in
+  abs_float (a -. b) < eps
 
 let random_seed = 0xA12EA88
 
