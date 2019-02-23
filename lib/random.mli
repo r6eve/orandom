@@ -8,6 +8,7 @@
 (****************************************************************)
 
 module Random : sig
+
   val init : unit -> unit
   (** Create a new random number generator. *)
 
@@ -27,9 +28,10 @@ module Random : sig
   (** Return the next random, Gaussian (normally) distributed value
       with mean 0.0 and standard deviation 1.0. *)
 
-  val ints : unit -> int Seq.t
+  val ints : unit -> int Stream.t
   (** Return an effectively unlimited stream of random int values. *)
 
-  val floats : unit -> float Seq.t
+  val floats : unit -> float Stream.t
   (** Same as [ints] except return float values. *)
+
 end
