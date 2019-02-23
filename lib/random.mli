@@ -18,10 +18,10 @@ module Random : sig
   (** Return the next random, uniformly distributed boolean value. *)
 
   val next_int : unit -> int
-  (** Same as [next_boolean] but return int value. *)
+  (** Same as [next_boolean] except return int value. *)
 
   val next_float : unit -> float
-  (** Same as [next_boolean] but return float value. *)
+  (** Same as [next_boolean] except return float value. *)
 
   val next_gaussian : unit -> float
   (** Return the next random, Gaussian (normally) distributed value
@@ -31,5 +31,5 @@ module Random : sig
   (** Return an effectively unlimited stream of random int values. *)
 
   val floats : unit -> float Seq.t
-  (** Same as [ints] but return float values. *)
+  (** Same as [ints] except return float values. *)
 end

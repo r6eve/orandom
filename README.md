@@ -4,7 +4,26 @@
 orandom is an OCaml library which acts partially like [java.util.Random][].
 You can check out the methods at lib/random.mli file.
 
-#### Unit Testing
+## Usage
+
+### Import orandom in your code
+
+TBD
+
+### Interactive Session
+
+```console
+> dune utop
+utop [0]: open Orandom.Random;;
+utop [1]: Random.set_seed(0xA12EA88);;
+- : unit = ()
+utop [2]: Random.next_boolean ();;
+- : bool = false
+utop [3]: Random.next_boolean ();;
+- : bool = true
+```
+
+### Unit Testing
 
 ```console
 > dune runtest

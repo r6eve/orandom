@@ -30,11 +30,19 @@ module Random = struct
     seed := I.logand (I.of_int (1 lsl 48 - 1)) @@ I.add 0xBL @@ I.mul soil !seed;
     I.shift_right_logical !seed (48 - bits)
 
-  let next_boolean () = next(1) <> 0L
+  let next_boolean () = next 1 <> 0L
 
-  let next_int () = assert false
+  (* Bit trick for built-in [int] type. *)
+  let next_int () = Int32.to_int @@ Int64.to_int32 @@ next 32
 
-  let next_float () = assert false
+  let next_float () =
+    let module I = Int64 in
+    (* Must be called as this order. *)
+    let na = next 26 in
+    let nb = next 27 in
+    let lhs = I.to_float @@ I.add (I.shift_left na 27) nb in
+    let rhs = float @@ 1 lsl 53 in
+    lhs /. rhs
 
   let next_gaussian () = assert false
 
