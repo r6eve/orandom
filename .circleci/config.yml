@@ -1,7 +1,6 @@
 version: 2
-
 jobs:
-  build_and_test:
+  build:
     docker:
       - image: ocaml/opam2:alpine-3.9-ocaml-4.07
     working_directory: ~/repo
@@ -15,9 +14,3 @@ jobs:
       - run:
           name: Test
           command: eval `opam config env` && dune runtest
-
-workflows:
-  version: 2
-  workflow:
-    jobs:
-    - build_and_test
