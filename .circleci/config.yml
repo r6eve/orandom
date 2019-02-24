@@ -10,7 +10,7 @@ jobs:
           at: .
       - run:
           name: Build
-          command: dune build
+          command: eval `opam config env` && dune build
       - run:
           name: Test
           command: eval `opam config env` && dune runtest
