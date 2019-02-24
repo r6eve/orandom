@@ -9,8 +9,8 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Build
-          command: dune build
+          name: Install
+          command: eval `opam config env` && opam pin add -y orandom .
       - run:
           name: Test
           command: eval `opam config env` && dune runtest
