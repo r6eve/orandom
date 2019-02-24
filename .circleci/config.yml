@@ -12,8 +12,5 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Install
-          command: eval `opam config env` && opam pin add -y orandom .
-      - run:
-          name: Unit testing
-          command: eval `opam config env` && dune runtest
+          name: Install and Unit testing
+          command: eval `opam config env` && opam pin add -y orandom . --with-test
