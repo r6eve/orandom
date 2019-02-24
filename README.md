@@ -29,6 +29,6 @@ utop [3]: Random.next_boolean ();;
 > dune runtest
 ```
 
-[Build Status]: https://travis-ci.org/r6eve/orandom.svg?branch=master
-[CI Results]: https://travis-ci.org/r6eve/orandom
+[Build Status]: https://circleci.com/gh/r6eve/orandom.svg?style=svg
+[CI Results]: https://circleci.com/gh/r6eve/orandom
 [java.util.Random]: https://docs.oracle.com/javase/10/docs/api/java/util/Random.html
