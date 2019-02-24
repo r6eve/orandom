@@ -5,6 +5,9 @@ jobs:
       - image: ocaml/opam2:alpine-3.9-ocaml-4.07
     working_directory: ~/repo
     steps:
+      - run:
+          name: Install System Dependencies
+          command: sudo apk add --no-cache m4
       - checkout
       - attach_workspace:
           at: .
@@ -12,5 +15,5 @@ jobs:
           name: Install
           command: eval `opam config env` && opam pin add -y orandom .
       - run:
-          name: Test
+          name: Unit testing
           command: eval `opam config env` && dune runtest
