@@ -8,7 +8,9 @@ You can check out the methods at lib/random.mli file.
 
 ### Import orandom in your code
 
-TBD
+TBD:
+
+See test/random.ml for examples of use.
 
 ### Interactive Session
 
