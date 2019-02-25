@@ -31,6 +31,20 @@ let next_boolean_test () =
 ```java
 final Random rnd = new Random();
 rnd.setSeed(random_seed);
+final byte[] bs = new byte[10];
+rnd.nextBytes(bs);
+for (int i = 0; i < bs.length; ++i) { System.err.println(bs[i]); }
+```
+*)
+let next_bytes_test () =
+  let _expected = [-35; 104; -77; 41; -62; -74; -20; -96; -66; -1] in
+  Random.set_seed random_seed;
+  ()
+
+(**
+```java
+final Random rnd = new Random();
+rnd.setSeed(random_seed);
 for (int i = 0; i < 10; ++i) { System.err.println(rnd.nextInt()); }
 ```
 *)
@@ -111,9 +125,33 @@ rnd.setSeed(random_seed);
 rnd.ints(10L).forEach(e -> System.err.println(e));
 ```
 *)
-let ints_stream_size_test () =
+let ints_streamsize_test () =
   let _expected = [699623645; -1595099454; -1287389250; -1685747256; 1682232222;
                   -913754311; -574631589; -119104651; -1773027241; 1347232330] in
+  Random.set_seed random_seed;
+  ()
+
+(**
+```java
+final Random rnd = new Random();
+rnd.setSeed(random_seed);
+rnd.ints(1, 5).limit(10).forEach(e -> System.err.println(e));
+```
+*)
+let ints_range_test () =
+  let _expected = [1; 3; 3; 3; 2; 4; 4; 4; 3; 2] in
+  Random.set_seed random_seed;
+  ()
+
+(**
+```java
+final Random rnd = new Random();
+rnd.setSeed(random_seed);
+rnd.ints(10L, 1, 5).forEach(e -> System.err.println(e));
+```
+*)
+let ints_streamsize_and_range_test () =
+  let _expected = [1; 3; 3; 3; 2; 4; 4; 4; 3; 2] in
   Random.set_seed random_seed;
   ()
 
@@ -142,7 +180,7 @@ rnd.setSeed(random_seed);
 rnd.doubles(10L).forEach(e -> System.err.println(e));
 ```
 *)
-let floats_stream_size_test () =
+let floats_streamsize_test () =
   let _expected = [0.16289382619577597; 0.7002563269064781; 0.391675215769559;
                   0.8662081654707906; 0.5871849255811716; 0.795985400090248;
                   0.8753358845961806; 0.5779306167183001; 0.25412226823745343;
@@ -150,13 +188,48 @@ let floats_stream_size_test () =
   Random.set_seed random_seed;
   ()
 
+(**
+```java
+final Random rnd = new Random();
+rnd.setSeed(random_seed);
+rnd.doubles(1.0, 5.0).limit(10).forEach(e -> System.err.println(e));
+```
+*)
+let floats_range_test () =
+  let _expected = [1.6515753047831039; 3.8010253076259124; 2.566700863078236;
+                   4.464832661883163; 3.3487397023246865; 4.183941600360992;
+                   4.501343538384722; 3.3117224668732006; 2.0164890729498137;
+                   3.6360502967874773] in
+  Random.set_seed random_seed;
+  ()
+
+(**
+```java
+final Random rnd = new Random();
+rnd.setSeed(random_seed);
+rnd.doubles(10L, 1.0, 5.0).forEach(e -> System.err.println(e));
+```
+*)
+let floats_streamsize_and_range_test () =
+  let _expected = [1.6515753047831039; 3.8010253076259124; 2.566700863078236;
+                   4.464832661883163; 3.3487397023246865; 4.183941600360992;
+                   4.501343538384722; 3.3117224668732006; 2.0164890729498137;
+                   3.6360502967874773] in
+  Random.set_seed random_seed;
+  ()
+
 let () =
   next_boolean_test ();
+  next_bytes_test ();
   next_int_test ();
   next_int_bound_test ();
   next_float_test ();
   next_gaussian_test ();
   ints_test ();
-  ints_stream_size_test ();
+  ints_streamsize_test ();
+  ints_range_test ();
+  ints_streamsize_and_range_test ();
   floats_test ();
-  floats_stream_size_test ();
+  floats_streamsize_test ();
+  floats_range_test ();
+  floats_streamsize_and_range_test ()
