@@ -18,6 +18,9 @@ module Random : sig
   val next_boolean : unit -> bool
   (** Return the next random, uniformly distributed boolean value. *)
 
+  val next_bytes : bytes -> bytes
+  (** Generate random bytes and place them into a user-supplied byte sequence. *)
+
   val next_int : unit -> int
   (** Same as [next_boolean] except return int value. *)
 

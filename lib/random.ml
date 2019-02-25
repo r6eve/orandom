@@ -34,6 +34,8 @@ module Random = struct
 
   let next_boolean () = not @@ Int64.equal 0L @@ next 1
 
+  let next_bytes _bytes = assert false
+
   let next_int () =
     (* Bit trick for built-in [int] type. *)
     Int32.to_int @@ Int64.to_int32 @@ next 32
