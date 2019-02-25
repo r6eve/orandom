@@ -34,7 +34,14 @@ module Random = struct
 
   let next_boolean () = not @@ Int64.equal 0L @@ next 1
 
-  let next_bytes _bytes = assert false
+  let next_bytes bytes =
+    let max = Bytes.length bytes land (lnot 0x3) in
+    let rec doit i =
+      if i >= max then ()
+      else
+        doit (i + 4) in
+    doit 0;
+    bytes
 
   let next_int () =
     (* Bit trick for built-in [int] type. *)
