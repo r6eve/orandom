@@ -38,28 +38,28 @@ module Random = struct
     (* Bit trick for built-in [int] type. *)
     Int32.to_int @@ Int64.to_int32 @@ next 32
 
-  let next_bytes bytes = bytes
-    (*
-    let max = Bytes.length bytes land lnot 0x3 in
+  let next_bytes ba =
+    let byte_of_int i =
+      let n = 0xFF land i in
+      if n land 0x80 = 0x80 then - (0xFF - n + 1) else n in
+    let max = Array.length ba land lnot 0x3 in
     let rec doit i =
       if i >= max then ()
       else
         let n = next_int () in
         for j = i to i + 3 do
-          Bytes.set bytes j @@ char_of_int @@ n lsr 8 * (j - i);
+          ba.(j) <- byte_of_int @@ (lsr) n @@ 8 * (j - i);
         done;
         doit (i + 4) in
     doit 0;
-    if max >= Bytes.length bytes then bytes
+    if max >= Array.length ba then ba
     else begin
-      Bytes.set bytes max @@ char_of_int @@ next_int ();
-      for i = max + 1 to Bytes.length bytes - 1 do
-        let n = (lsr) 8 @@ int_of_char @@ Bytes.get bytes (i - 1) in
-        Bytes.set bytes i @@ char_of_int n;
+      ba.(max) <- byte_of_int @@ next_int ();
+      for i = max + 1 to Array.length ba - 1 do
+        ba.(i) <- byte_of_int @@ ba.(i - 1) lsr 8;
       done;
-      bytes
+      ba
     end
-  *)
 
   let next_float () =
     let module I = Int64 in

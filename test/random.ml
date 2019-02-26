@@ -37,10 +37,12 @@ for (int i = 0; i < bs.length; ++i) { System.err.println(bs[i]); }
 ```
 *)
 let next_bytes_test () =
-  let _expected = [-35; 104; -77; 41; -62; -74; -20; -96; -66; -1] in
+  let expected = [-35; 104; -77; 41; -62; -74; -20; -96; -66; -1] in
   Random.set_seed random_seed;
-  ()
-  (* let _bs = Random.next_bytes @@ Bytes.make 10 '\000' in *)
+  let ba = Random.next_bytes @@ Array.make 10 50 in
+  expected
+  |> List.iteri @@ fun i e ->
+    assert (e = ba.(i))
 
 (**
 ```java
