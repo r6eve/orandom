@@ -16,8 +16,9 @@ module Random : sig
   type ints_arg =
     | UnitA
     | StreamSize of int
-    | Range of int * int
-    | SandR of int * int * int
+    | Range of range
+    | SandR of int * range
+  and range = int * int
 
   val init : unit -> unit
   (** Create a new random number generator. *)

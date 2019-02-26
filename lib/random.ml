@@ -16,8 +16,9 @@ module Random = struct
   type ints_arg =
     | UnitA
     | StreamSize of int
-    | Range of int * int
-    | SandR of int * int * int
+    | Range of range
+    | SandR of int * range
+  and range = int * int
 
   let soil = 0x5DEECE66DL
 
