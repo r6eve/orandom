@@ -20,7 +20,7 @@ module Random : sig
 
   val next_bytes : int array -> int array
   (** Generate random bytes and place them into a user-supplied int array.
-      Note that the byte type in Java ranges from -127--126 but in OCaml
+      Note that the byte type in Java ranges from -128--127 but in OCaml
       0--255. In order to make the results corresponding to Java, use int array
       instead of bytes. *)
 
