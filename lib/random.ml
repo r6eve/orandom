@@ -34,18 +34,32 @@ module Random = struct
 
   let next_boolean () = not @@ Int64.equal 0L @@ next 1
 
-  let next_bytes bytes =
-    let max = Bytes.length bytes land (lnot 0x3) in
-    let rec doit i =
-      if i >= max then ()
-      else
-        doit (i + 4) in
-    doit 0;
-    bytes
-
   let next_int () =
     (* Bit trick for built-in [int] type. *)
     Int32.to_int @@ Int64.to_int32 @@ next 32
+
+  let next_bytes bytes = bytes
+    (*
+    let max = Bytes.length bytes land lnot 0x3 in
+    let rec doit i =
+      if i >= max then ()
+      else
+        let n = next_int () in
+        for j = i to i + 3 do
+          Bytes.set bytes j @@ char_of_int @@ n lsr 8 * (j - i);
+        done;
+        doit (i + 4) in
+    doit 0;
+    if max >= Bytes.length bytes then bytes
+    else begin
+      Bytes.set bytes max @@ char_of_int @@ next_int ();
+      for i = max + 1 to Bytes.length bytes - 1 do
+        let n = (lsr) 8 @@ int_of_char @@ Bytes.get bytes (i - 1) in
+        Bytes.set bytes i @@ char_of_int n;
+      done;
+      bytes
+    end
+  *)
 
   let next_float () =
     let module I = Int64 in

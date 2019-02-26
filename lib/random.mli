@@ -18,8 +18,11 @@ module Random : sig
   val next_boolean : unit -> bool
   (** Return the next random, uniformly distributed boolean value. *)
 
-  val next_bytes : bytes -> bytes
-  (** Generate random bytes and place them into a user-supplied byte sequence. *)
+  val next_bytes : int array -> int array
+  (** Generate random bytes and place them into a user-supplied int array.
+      Note that the byte type in Java ranges from -127--126 but in OCaml
+      0--255. In order to make the results corresponding to Java, use int array
+      instead of bytes. *)
 
   val next_int : unit -> int
   (** Same as [next_boolean] except return int value. *)
