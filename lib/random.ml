@@ -9,6 +9,16 @@
 
 module Random = struct
 
+  type next_int_arg =
+    | Unit
+    | Bound of int
+
+  type ints_arg =
+    | UnitA
+    | StreamSize of int
+    | Range of int * int
+    | SandR of int * int * int
+
   let soil = 0x5DEECE66DL
 
   let seed = ref 0L
@@ -34,9 +44,11 @@ module Random = struct
 
   let next_boolean () = not @@ Int64.equal 0L @@ next 1
 
-  let next_int () =
-    (* Bit trick for built-in [int] type. *)
-    Int32.to_int @@ Int64.to_int32 @@ next 32
+  let next_int = function
+    | Unit ->
+      (* Bit trick for built-in [int] type. *)
+      Int32.to_int @@ Int64.to_int32 @@ next 32
+    | Bound i -> i
 
   let next_bytes ba =
     let byte_of_int i =
@@ -46,7 +58,7 @@ module Random = struct
     let rec doit i =
       if i >= max then ()
       else
-        let n = next_int () in
+        let n = next_int Unit in
         for j = i to i + 3 do
           ba.(j) <- byte_of_int @@ (lsr) n @@ 8 * (j - i);
         done;
@@ -54,7 +66,7 @@ module Random = struct
     doit 0;
     if max >= Array.length ba then ba
     else begin
-      ba.(max) <- byte_of_int @@ next_int ();
+      ba.(max) <- byte_of_int @@ next_int Unit;
       for i = max + 1 to Array.length ba - 1 do
         ba.(i) <- byte_of_int @@ ba.(i - 1) lsr 8;
       done;
@@ -87,7 +99,7 @@ module Random = struct
       next_gaussian := Some (z *. norm);
       y *. norm
 
-  let ints () = Stream.from @@ fun _ -> Some (next_int ())
+  let ints () = Stream.from @@ fun _ -> Some (next_int Unit)
 
   let floats () = Stream.from @@ fun _ -> Some (next_float ())
 

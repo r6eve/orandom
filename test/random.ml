@@ -57,7 +57,7 @@ let next_int_test () =
   Random.set_seed random_seed;
   expected
   |> List.iter @@ fun e ->
-    assert (e = Random.next_int ())
+    assert (e = Random.next_int Unit)
 
 (**
 ```java

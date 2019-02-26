@@ -9,6 +9,16 @@
 
 module Random : sig
 
+  type next_int_arg =
+    | Unit
+    | Bound of int
+
+  type ints_arg =
+    | UnitA
+    | StreamSize of int
+    | Range of int * int
+    | SandR of int * int * int
+
   val init : unit -> unit
   (** Create a new random number generator. *)
 
@@ -24,7 +34,7 @@ module Random : sig
       0--255. In order to make the results corresponding to Java, use int array
       instead of bytes. *)
 
-  val next_int : unit -> int
+  val next_int : next_int_arg -> int
   (** Same as [next_boolean] except return int value. *)
 
   val next_float : unit -> float
