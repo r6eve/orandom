@@ -67,9 +67,11 @@ for (int i = 0; i < 10; ++i) { System.err.println(rnd.nextInt(10)); }
 ```
 *)
 let next_int_bound_test () =
-  let _expected = [2; 1; 3; 0; 1; 2; 3; 2; 7; 5] in
+  let expected = [2; 1; 3; 0; 1; 2; 3; 2; 7; 5] in
   Random.set_seed random_seed;
-  ()
+  expected
+  |> List.iter @@ fun e ->
+    assert (e = Random.next_int (Bound 10))
 
 (**
 ```java
@@ -116,7 +118,7 @@ let ints_test () =
   let expected = [699623645; -1595099454; -1287389250; -1685747256; 1682232222;
                   -913754311; -574631589; -119104651; -1773027241; 1347232330] in
   Random.set_seed random_seed;
-  let s = Random.ints () in
+  let s = Random.ints IUnit in
   expected
   |> List.iter @@ fun e ->
     assert (e = Stream.next s)
@@ -132,6 +134,7 @@ let ints_streamsize_test () =
   let _expected = [699623645; -1595099454; -1287389250; -1685747256; 1682232222;
                   -913754311; -574631589; -119104651; -1773027241; 1347232330] in
   Random.set_seed random_seed;
+  (* TODO: *)
   ()
 
 (**
@@ -144,6 +147,7 @@ rnd.ints(1, 5).limit(10).forEach(e -> System.err.println(e));
 let ints_range_test () =
   let _expected = [1; 3; 3; 3; 2; 4; 4; 4; 3; 2] in
   Random.set_seed random_seed;
+  (* TODO: *)
   ()
 
 (**
@@ -156,6 +160,7 @@ rnd.ints(10L, 1, 5).forEach(e -> System.err.println(e));
 let ints_streamsize_and_range_test () =
   let _expected = [1; 3; 3; 3; 2; 4; 4; 4; 3; 2] in
   Random.set_seed random_seed;
+  (* TODO: *)
   ()
 
 (**
@@ -171,7 +176,7 @@ let floats_test () =
                   0.8753358845961806; 0.5779306167183001; 0.25412226823745343;
                   0.6590125741968693] in
   Random.set_seed random_seed;
-  let s = Random.floats () in
+  let s = Random.floats FUnit in
   expected
   |> List.iter @@ fun e ->
     assert (Util.same_float_p e @@ Stream.next s)
@@ -189,6 +194,7 @@ let floats_streamsize_test () =
                   0.8753358845961806; 0.5779306167183001; 0.25412226823745343;
                   0.6590125741968693] in
   Random.set_seed random_seed;
+  (* TODO: *)
   ()
 
 (**
@@ -204,6 +210,7 @@ let floats_range_test () =
                   4.501343538384722; 3.3117224668732006; 2.0164890729498137;
                   3.6360502967874773] in
   Random.set_seed random_seed;
+  (* TODO: *)
   ()
 
 (**
@@ -219,6 +226,7 @@ let floats_streamsize_and_range_test () =
                   4.501343538384722; 3.3117224668732006; 2.0164890729498137;
                   3.6360502967874773] in
   Random.set_seed random_seed;
+  (* TODO: *)
   ()
 
 let () =

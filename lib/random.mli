@@ -9,16 +9,22 @@
 
 module Random : sig
 
-  type next_int_arg =
+  type next_int_t =
     | Unit
     | Bound of int
-
-  type ints_arg =
-    | UnitA
-    | StreamSize of int
-    | Range of range
-    | SandR of int * range
-  and range = int * int
+  and ints_t =
+    | IUnit
+    | IStreamSize of stream_size_t
+    | IRange of ints_range_t
+    | ISandR of stream_size_t * ints_range_t
+  and floats_t =
+    | FUnit
+    | FStreamSize of stream_size_t
+    | FRange of floats_range_t
+    | FSandR of stream_size_t * floats_range_t
+  and stream_size_t = int
+  and ints_range_t = int * int
+  and floats_range_t = float * float
 
   val init : unit -> unit
   (** Create a new random number generator. *)
@@ -35,7 +41,7 @@ module Random : sig
       0--255. In order to make the results corresponding to Java, use int array
       instead of bytes. *)
 
-  val next_int : next_int_arg -> int
+  val next_int : next_int_t -> int
   (** Same as [next_boolean] except return int value. *)
 
   val next_float : unit -> float
@@ -45,10 +51,10 @@ module Random : sig
   (** Return the next random, Gaussian (normally) distributed value
       with mean 0.0 and standard deviation 1.0. *)
 
-  val ints : unit -> int Stream.t
+  val ints : ints_t -> int Stream.t
   (** Return an effectively unlimited stream of random int values. *)
 
-  val floats : unit -> float Stream.t
+  val floats : floats_t -> float Stream.t
   (** Same as [ints] except return float values. *)
 
 end

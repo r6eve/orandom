@@ -9,15 +9,23 @@
 
 module Random = struct
 
-  type next_int_arg =
+  (* TODO: declare each points. *)
+  type next_int_t =
     | Unit
     | Bound of int
-  and ints_arg =
-    | UnitA
-    | StreamSize of int
-    | Range of range
-    | SandR of int * range
-  and range = int * int
+  and ints_t =
+    | IUnit
+    | IStreamSize of stream_size_t
+    | IRange of ints_range_t
+    | ISandR of stream_size_t * ints_range_t
+  and floats_t =
+    | FUnit
+    | FStreamSize of stream_size_t
+    | FRange of floats_range_t
+    | FSandR of stream_size_t * floats_range_t
+  and stream_size_t = int
+  and ints_range_t = int * int
+  and floats_range_t = float * float
 
   let soil = 0x5DEECE66DL
 
@@ -44,11 +52,23 @@ module Random = struct
 
   let next_boolean () = not @@ Int64.equal 0L @@ next 1
 
+  (* Bit trick for built-in [int] type. *)
+  let int_of_int64 n = Int32.to_int @@ Int64.to_int32 n
+
   let next_int = function
-    | Unit ->
-      (* Bit trick for built-in [int] type. *)
-      Int32.to_int @@ Int64.to_int32 @@ next 32
-    | Bound i -> i
+    | Unit -> int_of_int64 @@ next 32
+    | Bound n when n <= 0 -> invalid_arg "next_int: [bound] must be positive."
+    (* [n] is 0 or 1 or power of 2 *)
+    | Bound n when n land -n = n ->
+      ( * ) n @@ int_of_int64 @@ Int64.shift_right_logical (next 31) 31
+    | Bound n ->
+      let rec doit b v =
+        if b - v + n - 1 >= 0 then v
+        else
+          let b = int_of_int64 @@ next 31 in
+          doit b (b mod n) in
+      (* Start from dummy. *)
+      doit 0 n
 
   let next_bytes ba =
     let byte_of_int i =
@@ -99,8 +119,12 @@ module Random = struct
       next_gaussian := Some (z *. norm);
       y *. norm
 
-  let ints () = Stream.from @@ fun _ -> Some (next_int Unit)
+  let ints = function
+    | IUnit -> Stream.from @@ fun _ -> Some (next_int Unit)
+    | _ -> assert false
 
-  let floats () = Stream.from @@ fun _ -> Some (next_float ())
+  let floats = function
+    | FUnit -> Stream.from @@ fun _ -> Some (next_float ())
+    | _ -> assert false
 
 end
