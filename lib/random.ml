@@ -12,8 +12,7 @@ module Random = struct
   type next_int_arg =
     | Unit
     | Bound of int
-
-  type ints_arg =
+  and ints_arg =
     | UnitA
     | StreamSize of int
     | Range of range
