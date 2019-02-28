@@ -24,8 +24,8 @@ module Random = struct
     | FRange of floats_range_t
     | FSandR of stream_size_t * floats_range_t
   and stream_size_t = int
-  and ints_range_t = int * int
-  and floats_range_t = float * float
+  and ints_range_t = int * int  (* [start, end) *)
+  and floats_range_t = float * float  (* [start, end) *)
 
   let soil = 0x5DEECE66DL
 
@@ -124,12 +124,17 @@ module Random = struct
     | IUnit -> Stream.from @@ fun _ -> Some (next_int Unit)
     | IStreamSize s ->
       Stream.from @@ fun n -> if n = s then None else Some (next_int Unit)
+    | IRange (origin, bound) when origin < bound ->
+      Stream.from @@ fun _ -> Some (next_int (Bound (bound - origin)) + origin)
+    | IRange _ -> invalid_arg "ints: [bound] must be greater than [origin]."
     | _ -> assert false
 
   let floats = function
     | FUnit -> Stream.from @@ fun _ -> Some (next_float ())
     | FStreamSize s ->
       Stream.from @@ fun n -> if n = s then None else Some (next_float ())
+    | FRange (origin, bound) when origin < bound -> assert false
+    | FRange _ -> assert false
     | _ -> assert false
 
 end

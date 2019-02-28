@@ -149,8 +149,25 @@ rnd.ints(1, 5).limit(10).forEach(e -> System.err.println(e));
 let ints_range_test () =
   let _expected = [1; 3; 3; 3; 2; 4; 4; 4; 3; 2] in
   Random.set_seed random_seed;
-  (* TODO: *)
-  ()
+  let s = Random.ints (IRange (1, 5)) in
+  for _ = 1 to 10 do
+    Printf.printf "%d\n" @@ Stream.next s;
+  done
+(* TODO: BUG of `next_int Bound`
+  1
+  1
+  1
+  1
+  1
+  1
+  1
+  1
+  1
+  1
+*)
+  (* expected                     *)
+  (* |> List.iter @@ fun e ->     *)
+  (*   assert (e = Stream.next s) *)
 
 (**
 ```java
