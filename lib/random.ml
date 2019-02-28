@@ -52,8 +52,9 @@ module Random = struct
 
   let next_boolean () = not @@ Int64.equal 0L @@ next 1
 
-  (* Bit trick for built-in [int] type. *)
-  let int_of_int64 n = Int32.to_int @@ Int64.to_int32 n
+  let int_of_int64 n =
+    (* Bit trick for built-in [int] type. *)
+    Int32.to_int @@ Int64.to_int32 n
 
   let next_int = function
     | Unit -> int_of_int64 @@ next 32
@@ -127,6 +128,8 @@ module Random = struct
 
   let floats = function
     | FUnit -> Stream.from @@ fun _ -> Some (next_float ())
+    | FStreamSize s ->
+      Stream.from @@ fun n -> if n = s then None else Some (next_float ())
     | _ -> assert false
 
 end

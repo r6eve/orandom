@@ -191,13 +191,15 @@ rnd.doubles(10L).forEach(e -> System.err.println(e));
 ```
 *)
 let floats_streamsize_test () =
-  let _expected = [0.16289382619577597; 0.7002563269064781; 0.391675215769559;
+  let expected = [0.16289382619577597; 0.7002563269064781; 0.391675215769559;
                   0.8662081654707906; 0.5871849255811716; 0.795985400090248;
                   0.8753358845961806; 0.5779306167183001; 0.25412226823745343;
                   0.6590125741968693] in
   Random.set_seed random_seed;
-  (* TODO: *)
-  ()
+  let s = Random.floats (FStreamSize 10) in
+  expected
+  |> List.iter @@ fun e ->
+    assert (Util.same_float_p e @@ Stream.next s)
 
 (**
 ```java
