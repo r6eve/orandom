@@ -131,11 +131,13 @@ rnd.ints(10L).forEach(e -> System.err.println(e));
 ```
 *)
 let ints_streamsize_test () =
-  let _expected = [699623645; -1595099454; -1287389250; -1685747256; 1682232222;
+  let expected = [699623645; -1595099454; -1287389250; -1685747256; 1682232222;
                   -913754311; -574631589; -119104651; -1773027241; 1347232330] in
   Random.set_seed random_seed;
-  (* TODO: *)
-  ()
+  let s = Random.ints (IStreamSize 10) in
+  expected
+  |> List.iter @@ fun e ->
+    assert (e = Stream.next s)
 
 (**
 ```java

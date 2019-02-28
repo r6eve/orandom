@@ -121,6 +121,8 @@ module Random = struct
 
   let ints = function
     | IUnit -> Stream.from @@ fun _ -> Some (next_int Unit)
+    | IStreamSize s ->
+      Stream.from @@ fun n -> if n = s then None else Some (next_int Unit)
     | _ -> assert false
 
   let floats = function
