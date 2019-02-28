@@ -61,7 +61,8 @@ module Random = struct
     | Bound n when n <= 0 -> invalid_arg "next_int: [bound] must be positive."
     (* [n] is 0 or 1 or power of 2 *)
     | Bound n when n land -n = n ->
-      ( * ) n @@ int_of_int64 @@ Int64.shift_right_logical (next 31) 31
+      let lhs = Int64.mul (Int64.of_int n) @@ next 31 in
+      int_of_int64 @@ Int64.shift_right_logical lhs 31
     | Bound n ->
       let rec doit b v =
         if b - v + n - 1 >= 0 then v
