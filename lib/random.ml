@@ -123,22 +123,49 @@ module Random = struct
 
   let ints = function
     | IUnit -> Stream.from @@ fun _ -> Some (next_int Unit)
+
+    | IStreamSize s when s <= 0 ->
+      invalid_arg "ints: [stream_size] must be positive."
     | IStreamSize s ->
       Stream.from @@ fun n -> if n = s then None else Some (next_int Unit)
-    | IRange (origin, bound) when origin < bound ->
+
+    | IRange (origin, bound) when origin >= bound ->
+      invalid_arg "ints: [bound] must be greater than [origin]."
+    | IRange (origin, bound) ->
       Stream.from @@ fun _ -> Some (next_int (Bound (bound - origin)) + origin)
-    | IRange _ -> invalid_arg "ints: [bound] must be greater than [origin]."
-    | ISandR (s, (origin, bound)) when origin < bound ->
+
+    | ISandR (s, _) when s <= 0 ->
+      invalid_arg "ints: [stream_size] must be positive."
+    | ISandR (_, (origin, bound)) when origin >= bound ->
+      invalid_arg "ints: [bound] must be greater than [origin]."
+    | ISandR (s, (origin, bound)) ->
       Stream.from @@ fun n ->
         if n = s then None else Some (next_int (Bound (bound - origin)) + origin)
-    | ISandR _ -> invalid_arg "ints: [bound] must be greater than [origin]."
 
   let floats = function
     | FUnit -> Stream.from @@ fun _ -> Some (next_float ())
+
+    | FStreamSize s when s <= 0 ->
+      invalid_arg "floats: [stream_size] must be positive."
     | FStreamSize s ->
       Stream.from @@ fun n -> if n = s then None else Some (next_float ())
-    | FRange (origin, bound) when origin < bound -> assert false
-    | FRange _ -> assert false
-    | _ -> assert false
+
+    | FRange (origin, bound) when origin >= bound ->
+      invalid_arg "floats: [bound] must be greater than [origin]."
+    | FRange (origin, bound) ->
+      Stream.from @@ fun _ ->
+        let f = next_float () *. (bound -. origin) +. origin in
+        Some (if f < bound then f else bound -. 1.)
+
+    | FSandR (s, _) when s <= 0 ->
+      invalid_arg "floats: [stream_size] must be positive."
+    | FSandR (_, (origin, bound)) when origin >= bound ->
+      invalid_arg "floats: [stream_size] must be positive."
+    | FSandR (s, (origin, bound)) ->
+      Stream.from @@ fun n ->
+        if n = s then None
+        else
+          let f = next_float () *. (bound -. origin) +. origin in
+          Some (if f < bound then f else bound -. 1.)
 
 end
