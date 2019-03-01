@@ -162,10 +162,12 @@ rnd.ints(10L, 1, 5).forEach(e -> System.err.println(e));
 ```
 *)
 let ints_streamsize_and_range_test () =
-  let _expected = [1; 3; 3; 3; 2; 4; 4; 4; 3; 2] in
+  let expected = [1; 3; 3; 3; 2; 4; 4; 4; 3; 2] in
   Random.set_seed random_seed;
-  (* TODO: *)
-  ()
+  let s = Random.ints (ISandR (10, (1, 5))) in
+  expected
+  |> List.iter @@ fun e ->
+    assert (e = Stream.next s)
 
 (**
 ```java

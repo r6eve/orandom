@@ -128,7 +128,10 @@ module Random = struct
     | IRange (origin, bound) when origin < bound ->
       Stream.from @@ fun _ -> Some (next_int (Bound (bound - origin)) + origin)
     | IRange _ -> invalid_arg "ints: [bound] must be greater than [origin]."
-    | _ -> assert false
+    | ISandR (s, (origin, bound)) when origin < bound ->
+      Stream.from @@ fun n ->
+        if n = s then None else Some (next_int (Bound (bound - origin)) + origin)
+    | ISandR _ -> invalid_arg "ints: [bound] must be greater than [origin]."
 
   let floats = function
     | FUnit -> Stream.from @@ fun _ -> Some (next_float ())
