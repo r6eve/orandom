@@ -75,6 +75,13 @@ let next_int_bound_test () =
   |> List.iter @@ fun e ->
     assert (e = Random.next_int (Bound 10))
 
+let next_int_negative_bound_test () =
+  try
+    ignore @@ Random.next_int (Bound (-1));
+  with
+  | Invalid_argument _ -> assert true
+  | _ -> assert false
+
 (**
 ```java
 final Random rnd = new Random();
@@ -248,6 +255,7 @@ let () =
   next_bytes_test ();
   next_int_test ();
   next_int_bound_test ();
+  next_int_negative_bound_test ();
   next_float_test ();
   next_gaussian_test ();
   ints_test ();

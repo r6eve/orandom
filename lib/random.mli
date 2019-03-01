@@ -43,6 +43,7 @@ module Random : sig
 
   val next_int : next_int_t -> int
   (** Same as [next_boolean] except return int value. *)
+  (* TODO: Add documentation about [bound]. *)
 
   val next_float : unit -> float
   (** Same as [next_boolean] except return float value. *)
@@ -53,8 +54,10 @@ module Random : sig
 
   val ints : ints_t -> int Stream.t
   (** Return an effectively unlimited stream of random int values. *)
+  (* TODO: Add documentation about more possibilities. *)
 
   val floats : floats_t -> float Stream.t
   (** Same as [ints] except return float values. *)
+  (* TODO: Add documentation about more possibilities. *)
 
 end
