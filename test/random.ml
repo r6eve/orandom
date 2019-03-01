@@ -148,6 +148,13 @@ let ints_streamsize_test () =
   |> List.iter @@ fun e ->
     assert (e = Stream.next s)
 
+let ints_negative_streamsize_test () =
+  try
+    ignore @@ Random.ints (IStreamSize (-1));
+  with
+  | Invalid_argument _ -> assert true
+  | _ -> assert false
+
 (**
 ```java
 final Random rnd = new Random();
@@ -162,6 +169,13 @@ let ints_range_test () =
   expected
   |> List.iter @@ fun e ->
     assert (e = Stream.next s)
+
+let ints_invalid_range_test () =
+  try
+    ignore @@ Random.ints (IRange (1, 1));
+  with
+  | Invalid_argument _ -> assert true
+  | _ -> assert false
 
 (**
 ```java
@@ -214,6 +228,13 @@ let floats_streamsize_test () =
   |> List.iter @@ fun e ->
     assert (Util.same_float_p e @@ Stream.next s)
 
+let floats_negative_streamsize_test () =
+  try
+    ignore @@ Random.floats (FStreamSize (-1));
+  with
+  | Invalid_argument _ -> assert true
+  | _ -> assert false
+
 (**
 ```java
 final Random rnd = new Random();
@@ -231,6 +252,13 @@ let floats_range_test () =
   expected
   |> List.iter @@ fun e ->
     assert (Util.same_float_p e @@ Stream.next s)
+
+let floats_invalid_range_test () =
+  try
+    ignore @@ Random.floats (FRange (1., 1.));
+  with
+  | Invalid_argument _ -> assert true
+  | _ -> assert false
 
 (**
 ```java
@@ -260,9 +288,13 @@ let () =
   next_gaussian_test ();
   ints_test ();
   ints_streamsize_test ();
+  ints_negative_streamsize_test ();
   ints_range_test ();
+  ints_invalid_range_test ();
   ints_streamsize_and_range_test ();
   floats_test ();
   floats_streamsize_test ();
+  floats_negative_streamsize_test ();
   floats_range_test ();
+  floats_invalid_range_test ();
   floats_streamsize_and_range_test ()
