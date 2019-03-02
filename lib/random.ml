@@ -24,8 +24,8 @@ module Random = struct
     | FRange of floats_range_t
     | FSandR of stream_size_t * floats_range_t
   and stream_size_t = int
-  and ints_range_t = int * int  (* [start, end) *)
-  and floats_range_t = float * float  (* [start, end) *)
+  and ints_range_t = int * int  (* [origin, bound) *)
+  and floats_range_t = float * float  (* [origin, bound) *)
 
   let soil = 0x5DEECE66DL
 
