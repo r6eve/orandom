@@ -8,22 +8,26 @@ You can check out the methods at lib/random.mli file.
 
 ### Import orandom in your code
 
-TBD:
+```console
+> opam repo add orandom https://github.com/r6eve/orandom.git
+> opam install orandom
+```
 
-See test/random.ml for examples of use.
-
-### Interactive Session
+Then, you can use orandom on your machine.
 
 ```console
-> dune utop
-utop [0]: open Orandom.Random;;
-utop [1]: Random.set_seed(0xA12EA88);;
+> utop
+utop [0]: #require "orandom";;
+utop [1]: open Orandom.Random;;
+utop [2]: Random.set_seed(0xA12EA88);;
 - : unit = ()
-utop [2]: Random.next_boolean ();;
-- : bool = false
 utop [3]: Random.next_boolean ();;
+- : bool = false
+utop [4]: Random.next_boolean ();;
 - : bool = true
 ```
+
+See also test/random.ml for examples of use.
 
 ### Unit Testing
 
