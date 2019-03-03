@@ -125,7 +125,7 @@ let ints_test () =
   let expected = [699623645; -1595099454; -1287389250; -1685747256; 1682232222;
                   -913754311; -574631589; -119104651; -1773027241; 1347232330] in
   Random.set_seed random_seed;
-  let s = Random.ints IUnit in
+  let s = Random.ints Unit in
   expected
   |> List.iter @@ fun e ->
     assert (e = Stream.next s)
@@ -137,18 +137,18 @@ rnd.setSeed(random_seed);
 rnd.ints(10L).forEach(e -> System.err.println(e));
 ```
 *)
-let ints_streamsize_test () =
+let ints_stream_size_test () =
   let expected = [699623645; -1595099454; -1287389250; -1685747256; 1682232222;
                   -913754311; -574631589; -119104651; -1773027241; 1347232330] in
   Random.set_seed random_seed;
-  let s = Random.ints (IStreamSize 10) in
+  let s = Random.ints (StreamSize 10) in
   expected
   |> List.iter @@ fun e ->
     assert (e = Stream.next s)
 
-let ints_negative_streamsize_test () =
+let ints_negative_stream_size_test () =
   try
-    ignore @@ Random.ints (IStreamSize (-1));
+    ignore @@ Random.ints (StreamSize (-1));
   with
   | Invalid_argument _ -> assert true
   | _ -> assert false
@@ -163,14 +163,14 @@ rnd.ints(1, 5).limit(10).forEach(e -> System.err.println(e));
 let ints_range_test () =
   let expected = [1; 3; 3; 3; 2; 4; 4; 4; 3; 2] in
   Random.set_seed random_seed;
-  let s = Random.ints (IRange (1, 5)) in
+  let s = Random.ints (Range (1, 5)) in
   expected
   |> List.iter @@ fun e ->
     assert (e = Stream.next s)
 
 let ints_invalid_range_test () =
   try
-    ignore @@ Random.ints (IRange (1, 1));
+    ignore @@ Random.ints (Range (1, 1));
   with
   | Invalid_argument _ -> assert true
   | _ -> assert false
@@ -182,24 +182,24 @@ rnd.setSeed(random_seed);
 rnd.ints(10L, 1, 5).forEach(e -> System.err.println(e));
 ```
 *)
-let ints_streamsize_and_range_test () =
+let ints_stream_size_and_range_test () =
   let expected = [1; 3; 3; 3; 2; 4; 4; 4; 3; 2] in
   Random.set_seed random_seed;
-  let s = Random.ints (ISandR (10, (1, 5))) in
+  let s = Random.ints (SandR (10, (1, 5))) in
   expected
   |> List.iter @@ fun e ->
     assert (e = Stream.next s)
 
-let ints_negative_streamsize_and_range_test () =
+let ints_negative_stream_size_and_range_test () =
   try
-    ignore @@ Random.ints (ISandR (-1, (1, 5)));
+    ignore @@ Random.ints (SandR (-1, (1, 5)));
   with
   | Invalid_argument _ -> assert true
   | _ -> assert false
 
-let ints_streamsize_and_invalid_range_test () =
+let ints_stream_size_and_invalid_range_test () =
   try
-    ignore @@ Random.ints (ISandR (10, (1, 1)));
+    ignore @@ Random.ints (SandR (10, (1, 1)));
   with
   | Invalid_argument _ -> assert true
   | _ -> assert false
@@ -217,7 +217,7 @@ let floats_test () =
                   0.8753358845961806; 0.5779306167183001; 0.25412226823745343;
                   0.6590125741968693] in
   Random.set_seed random_seed;
-  let s = Random.floats FUnit in
+  let s = Random.floats Unit in
   expected
   |> List.iter @@ fun e ->
     assert (Util.same_float_p e @@ Stream.next s)
@@ -229,20 +229,20 @@ rnd.setSeed(random_seed);
 rnd.doubles(10L).forEach(e -> System.err.println(e));
 ```
 *)
-let floats_streamsize_test () =
+let floats_stream_size_test () =
   let expected = [0.16289382619577597; 0.7002563269064781; 0.391675215769559;
                   0.8662081654707906; 0.5871849255811716; 0.795985400090248;
                   0.8753358845961806; 0.5779306167183001; 0.25412226823745343;
                   0.6590125741968693] in
   Random.set_seed random_seed;
-  let s = Random.floats (FStreamSize 10) in
+  let s = Random.floats (StreamSize 10) in
   expected
   |> List.iter @@ fun e ->
     assert (Util.same_float_p e @@ Stream.next s)
 
-let floats_negative_streamsize_test () =
+let floats_negative_stream_size_test () =
   try
-    ignore @@ Random.floats (FStreamSize (-1));
+    ignore @@ Random.floats (StreamSize (-1));
   with
   | Invalid_argument _ -> assert true
   | _ -> assert false
@@ -260,14 +260,14 @@ let floats_range_test () =
                   4.501343538384722; 3.3117224668732006; 2.0164890729498137;
                   3.6360502967874773] in
   Random.set_seed random_seed;
-  let s = Random.floats (FRange (1., 5.)) in
+  let s = Random.floats (Range (1., 5.)) in
   expected
   |> List.iter @@ fun e ->
     assert (Util.same_float_p e @@ Stream.next s)
 
 let floats_invalid_range_test () =
   try
-    ignore @@ Random.floats (FRange (1., 1.));
+    ignore @@ Random.floats (Range (1., 1.));
   with
   | Invalid_argument _ -> assert true
   | _ -> assert false
@@ -279,27 +279,27 @@ rnd.setSeed(random_seed);
 rnd.doubles(10L, 1.0, 5.0).forEach(e -> System.err.println(e));
 ```
 *)
-let floats_streamsize_and_range_test () =
+let floats_stream_size_and_range_test () =
   let expected = [1.6515753047831039; 3.8010253076259124; 2.566700863078236;
                   4.464832661883163; 3.3487397023246865; 4.183941600360992;
                   4.501343538384722; 3.3117224668732006; 2.0164890729498137;
                   3.6360502967874773] in
   Random.set_seed random_seed;
-  let s = Random.floats (FSandR (10, (1., 5.))) in
+  let s = Random.floats (SandR (10, (1., 5.))) in
   expected
   |> List.iter @@ fun e ->
     assert (Util.same_float_p e @@ Stream.next s)
 
-let floats_negative_streamsize_and_range_test () =
+let floats_negative_stream_size_and_range_test () =
   try
-    ignore @@ Random.floats (FSandR (-1, (1., 5.)));
+    ignore @@ Random.floats (SandR (-1, (1., 5.)));
   with
   | Invalid_argument _ -> assert true
   | _ -> assert false
 
-let floats_streamsize_and_invalid_range_test () =
+let floats_stream_size_and_invalid_range_test () =
   try
-    ignore @@ Random.floats (FSandR (10, (1., 1.)));
+    ignore @@ Random.floats (SandR (10, (1., 1.)));
   with
   | Invalid_argument _ -> assert true
   | _ -> assert false
@@ -313,18 +313,18 @@ let () =
   next_float_test ();
   next_gaussian_test ();
   ints_test ();
-  ints_streamsize_test ();
-  ints_negative_streamsize_test ();
+  ints_stream_size_test ();
+  ints_negative_stream_size_test ();
   ints_range_test ();
   ints_invalid_range_test ();
-  ints_streamsize_and_range_test ();
-  ints_negative_streamsize_and_range_test ();
-  ints_streamsize_and_invalid_range_test ();
+  ints_stream_size_and_range_test ();
+  ints_negative_stream_size_and_range_test ();
+  ints_stream_size_and_invalid_range_test ();
   floats_test ();
-  floats_streamsize_test ();
-  floats_negative_streamsize_test ();
+  floats_stream_size_test ();
+  floats_negative_stream_size_test ();
   floats_range_test ();
   floats_invalid_range_test ();
-  floats_streamsize_and_range_test ();
-  floats_negative_streamsize_and_range_test ();
-  floats_streamsize_and_invalid_range_test ()
+  floats_stream_size_and_range_test ();
+  floats_negative_stream_size_and_range_test ();
+  floats_stream_size_and_invalid_range_test ()

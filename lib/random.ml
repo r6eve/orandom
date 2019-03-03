@@ -9,23 +9,27 @@
 
 module Random = struct
 
-  (* TODO: declare each points. *)
-  type next_int_t =
-    | Unit
-    | Bound of int
-  and ints_t =
-    | IUnit
-    | IStreamSize of stream_size_t
-    | IRange of ints_range_t
-    | ISandR of stream_size_t * ints_range_t
-  and floats_t =
-    | FUnit
-    | FStreamSize of stream_size_t
-    | FRange of floats_range_t
-    | FSandR of stream_size_t * floats_range_t
-  and stream_size_t = int
-  and ints_range_t = int * int  (* [origin, bound) *)
-  and floats_range_t = float * float  (* [origin, bound) *)
+  type next_int_t = Unit | Bound of int
+
+  module Ints = struct
+    type t =
+      | Unit
+      | StreamSize of stream_size
+      | Range of range
+      | SandR of stream_size * range
+    and stream_size = int
+    and range = int * int  (* [origin, bound) *)
+  end
+
+  module Floats = struct
+    type t =
+      | Unit
+      | StreamSize of stream_size
+      | Range of range
+      | SandR of stream_size * range
+    and stream_size = int
+    and range = float * float  (* [origin, bound) *)
+  end
 
   let soil = 0x5DEECE66DL
 
@@ -122,46 +126,46 @@ module Random = struct
       y *. norm
 
   let ints = function
-    | IUnit -> Stream.from @@ fun _ -> Some (next_int Unit)
+    | Ints.Unit -> Stream.from @@ fun _ -> Some (next_int Unit)
 
-    | IStreamSize s when s <= 0 ->
+    | Ints.StreamSize s when s <= 0 ->
       invalid_arg "ints: [stream_size] must be positive."
-    | IStreamSize s ->
+    | Ints.StreamSize s ->
       Stream.from @@ fun n -> if n = s then None else Some (next_int Unit)
 
-    | IRange (origin, bound) when origin >= bound ->
+    | Ints.Range (origin, bound) when origin >= bound ->
       invalid_arg "ints: [bound] must be greater than [origin]."
-    | IRange (origin, bound) ->
+    | Ints.Range (origin, bound) ->
       Stream.from @@ fun _ -> Some (next_int (Bound (bound - origin)) + origin)
 
-    | ISandR (s, _) when s <= 0 ->
+    | Ints.SandR (s, _) when s <= 0 ->
       invalid_arg "ints: [stream_size] must be positive."
-    | ISandR (_, (origin, bound)) when origin >= bound ->
+    | Ints.SandR (_, (origin, bound)) when origin >= bound ->
       invalid_arg "ints: [bound] must be greater than [origin]."
-    | ISandR (s, (origin, bound)) ->
+    | Ints.SandR (s, (origin, bound)) ->
       Stream.from @@ fun n ->
         if n = s then None else Some (next_int (Bound (bound - origin)) + origin)
 
   let floats = function
-    | FUnit -> Stream.from @@ fun _ -> Some (next_float ())
+    | Floats.Unit -> Stream.from @@ fun _ -> Some (next_float ())
 
-    | FStreamSize s when s <= 0 ->
+    | Floats.StreamSize s when s <= 0 ->
       invalid_arg "floats: [stream_size] must be positive."
-    | FStreamSize s ->
+    | Floats.StreamSize s ->
       Stream.from @@ fun n -> if n = s then None else Some (next_float ())
 
-    | FRange (origin, bound) when origin >= bound ->
+    | Floats.Range (origin, bound) when origin >= bound ->
       invalid_arg "floats: [bound] must be greater than [origin]."
-    | FRange (origin, bound) ->
+    | Floats.Range (origin, bound) ->
       Stream.from @@ fun _ ->
         let f = next_float () *. (bound -. origin) +. origin in
         Some (if f < bound then f else bound -. 1.)
 
-    | FSandR (s, _) when s <= 0 ->
+    | Floats.SandR (s, _) when s <= 0 ->
       invalid_arg "floats: [stream_size] must be positive."
-    | FSandR (_, (origin, bound)) when origin >= bound ->
+    | Floats.SandR (_, (origin, bound)) when origin >= bound ->
       invalid_arg "floats: [stream_size] must be positive."
-    | FSandR (s, (origin, bound)) ->
+    | Floats.SandR (s, (origin, bound)) ->
       Stream.from @@ fun n ->
         if n = s then None
         else
