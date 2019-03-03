@@ -1,3 +1,4 @@
 orandom.install
 _build
+_coverage
 .merlin
