@@ -125,6 +125,8 @@ module Random = struct
       next_gaussian := Some (z *. norm);
       y *. norm
 
+  let next_range_ints origin bound = next_int (Bound (bound - origin)) + origin
+
   let ints = function
     | Ints.Unit -> Stream.from @@ fun _ -> Some (next_int Unit)
 
@@ -136,7 +138,7 @@ module Random = struct
     | Ints.Range (origin, bound) when origin >= bound ->
       invalid_arg "ints: [bound] must be greater than [origin]."
     | Ints.Range (origin, bound) ->
-      Stream.from @@ fun _ -> Some (next_int (Bound (bound - origin)) + origin)
+      Stream.from @@ fun _ -> Some (next_range_ints origin bound)
 
     | Ints.SandR (s, _) when s <= 0 ->
       invalid_arg "ints: [stream_size] must be positive."
@@ -144,7 +146,11 @@ module Random = struct
       invalid_arg "ints: [bound] must be greater than [origin]."
     | Ints.SandR (s, (origin, bound)) ->
       Stream.from @@ fun n ->
-        if n = s then None else Some (next_int (Bound (bound - origin)) + origin)
+        if n = s then None else Some (next_range_ints origin bound)
+
+  let next_range_floats origin bound =
+    let f = next_float () *. (bound -. origin) +. origin in
+    if f < bound then f else bound -. 1.
 
   let floats = function
     | Floats.Unit -> Stream.from @@ fun _ -> Some (next_float ())
@@ -157,9 +163,7 @@ module Random = struct
     | Floats.Range (origin, bound) when origin >= bound ->
       invalid_arg "floats: [bound] must be greater than [origin]."
     | Floats.Range (origin, bound) ->
-      Stream.from @@ fun _ ->
-        let f = next_float () *. (bound -. origin) +. origin in
-        Some (if f < bound then f else bound -. 1.)
+      Stream.from @@ fun _ -> Some (next_range_floats origin bound)
 
     | Floats.SandR (s, _) when s <= 0 ->
       invalid_arg "floats: [stream_size] must be positive."
@@ -167,9 +171,6 @@ module Random = struct
       invalid_arg "floats: [stream_size] must be positive."
     | Floats.SandR (s, (origin, bound)) ->
       Stream.from @@ fun n ->
-        if n = s then None
-        else
-          let f = next_float () *. (bound -. origin) +. origin in
-          Some (if f < bound then f else bound -. 1.)
+        if n = s then None else Some (next_range_floats origin bound)
 
 end
