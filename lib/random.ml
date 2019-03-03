@@ -12,23 +12,27 @@ module Random = struct
   type next_int_t = Unit | Bound of int
 
   module Ints = struct
+    type elt = int
+
     type t =
       | Unit
       | StreamSize of stream_size
       | Range of range
       | SandR of stream_size * range
     and stream_size = int
-    and range = int * int  (* [origin, bound) *)
+    and range = elt * elt  (* [origin, bound) *)
   end
 
   module Floats = struct
+    type elt = float
+
     type t =
       | Unit
       | StreamSize of stream_size
       | Range of range
       | SandR of stream_size * range
     and stream_size = int
-    and range = float * float  (* [origin, bound) *)
+    and range = elt * elt  (* [origin, bound) *)
   end
 
   let soil = 0x5DEECE66DL
@@ -168,7 +172,7 @@ module Random = struct
     | Floats.SandR (s, _) when s <= 0 ->
       invalid_arg "[stream_size] must be positive."
     | Floats.SandR (_, (origin, bound)) when origin >= bound ->
-      invalid_arg "[stream_size] must be positive."
+      invalid_arg "[bound] must be greater than [origin]."
     | Floats.SandR (s, (origin, bound)) ->
       Stream.from @@ fun n ->
         if n = s then None else Some (next_range_floats origin bound)

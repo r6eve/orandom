@@ -12,23 +12,31 @@ module Random : sig
   type next_int_t = Unit | Bound of int
 
   module Ints : sig
+    type elt = int
+    (** The type of stream elements. *)
+
     type t =
       | Unit
       | StreamSize of stream_size
       | Range of range
       | SandR of stream_size * range
     and stream_size = int
-    and range = int * int  (* [origin, bound) *)
+    and range = elt * elt  (* [origin, bound) *)
+    (** The type of streams. *)
   end
 
   module Floats : sig
+    type elt = float
+    (** The type of stream elements. *)
+
     type t =
       | Unit
       | StreamSize of stream_size
       | Range of range
       | SandR of stream_size * range
     and stream_size = int
-    and range = float * float  (* [origin, bound) *)
+    and range = elt * elt  (* [origin, bound) *)
+    (** The type of streams. *)
   end
 
   val init : unit -> unit
@@ -47,8 +55,8 @@ module Random : sig
       array instead of bytes. *)
 
   val next_int : next_int_t -> int
-  (** Same as [next_boolean] except return int value. *)
-  (* TODO: Add documentation about [bound]. *)
+  (** Same as [next_boolean] except return int value. If [bound] is given,
+      return int value between 0 (inclusive) and [bound] (exclusive). *)
 
   val next_float : unit -> float
   (** Same as [next_boolean] except return float value. *)
@@ -59,10 +67,8 @@ module Random : sig
 
   val ints : Ints.t -> int Stream.t
   (** Return an effectively unlimited stream of random int values. *)
-  (* TODO: Add documentation about more possibilities. *)
 
   val floats : Floats.t -> float Stream.t
   (** Same as [ints] except return float values. *)
-  (* TODO: Add documentation about more possibilities. *)
 
 end
