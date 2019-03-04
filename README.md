@@ -35,6 +35,24 @@ See also test/random.ml for examples of use.
 > dune runtest
 ```
 
+## Contributing
+
+If you would like to help making this repository, take the following steps
+(it's just guidelines, not rules).
+
+1. Fork this repository: https://github.com/r6eve/orandom/fork
+2. Switch branches: `git checkout -b new-feature`
+3. Do something.
+4. Commits: `git commit -am 'add some feature'`
+5. Push to your repository: `git push origin new-feature`
+6. Send a pull request.
+
+## Contributors
+
+- [r6eve][] - Neat
+
+
 [Build Status]: https://circleci.com/gh/r6eve/orandom.svg?style=svg
 [CI Results]: https://circleci.com/gh/r6eve/orandom
 [java.util.Random]: https://docs.oracle.com/javase/10/docs/api/java/util/Random.html
+[r6eve]: https://github.com/r6eve
