@@ -7,4 +7,5 @@
 
 let eps = 1e-16
 
-let same_float_p a b = abs_float (a -. b) < eps
+let same_float_p a b =
+  abs_float (a -. b) < eps

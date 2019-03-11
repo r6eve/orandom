@@ -56,7 +56,8 @@ module Random = struct
     seed := I.logand lhs rhs;
     I.shift_right_logical !seed (48 - bits)
 
-  let next_boolean () = not @@ Int64.equal 0L @@ next 1
+  let next_boolean () =
+    not @@ Int64.equal 0L @@ next 1
 
   let int_of_int64 n =
     (* Bit trick for built-in [int] type. *)
@@ -71,17 +72,20 @@ module Random = struct
       int_of_int64 @@ Int64.shift_right_logical lhs 31
     | Bound n ->
       let rec doit b v =
-        if b - v + n - 1 >= 0 then v
+        if b - v + n - 1 >= 0 then
+          v
         else
           let b = int_of_int64 @@ next 31 in
-          doit b (b mod n) in
+          doit b (b mod n)
+      in
       (* Start from dummy. *)
       doit 0 n
 
   let next_bytes ba =
     let byte_of_int i =
       let n = 0xFF land i in
-      if n land 0x80 = 0x80 then - (0xFF - n + 1) else n in
+      if n land 0x80 = 0x80 then - (0xFF - n + 1) else n
+    in
     let max = Array.length ba land lnot 0x3 in
     let rec doit i =
       if i >= max then
@@ -94,7 +98,8 @@ module Random = struct
         doit (i + 4)
     in
     doit 0;
-    if max >= Array.length ba then ba
+    if max >= Array.length ba then
+      ba
     else begin
       ba.(max) <- byte_of_int @@ next_int Unit;
       for i = max + 1 to Array.length ba - 1 do
@@ -119,17 +124,20 @@ module Random = struct
       g
     | None ->
       let rec doit (x, y, z) =
-        if x < 1. then x, y, z
+        if x < 1. then
+          x, y, z
         else
           let y = 2. *. next_float () -. 1. in
           let z = 2. *. next_float () -. 1. in
-          doit (y *. y +. z *. z, y, z) in
+          doit (y *. y +. z *. z, y, z)
+      in
       let x, y, z = doit (1., 0., 0.) in
       let norm = sqrt @@ -2. *. log x /. x in
       next_gaussian := Some (z *. norm);
       y *. norm
 
-  let next_range_ints origin bound = next_int (Bound (bound - origin)) + origin
+  let next_range_ints origin bound =
+    next_int (Bound (bound - origin)) + origin
 
   let ints = function
     | Ints.Unit -> Stream.from @@ fun _ -> Some (next_int Unit)
