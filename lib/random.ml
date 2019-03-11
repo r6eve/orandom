@@ -1,11 +1,9 @@
-(****************************************************************)
-(*                                                              *)
-(*           Copyright r6eve 2019 -                             *)
-(*  Distributed under the Boost Software License, Version 1.0.  *)
-(*     (See accompanying file LICENSE_1_0.txt or copy at        *)
-(*           https://www.boost.org/LICENSE_1_0.txt)             *)
-(*                                                              *)
-(****************************************************************)
+(*
+ *           Copyright r6eve 2019 -
+ *  Distributed under the Boost Software License, Version 1.0.
+ *     (See accompanying file LICENSE_1_0.txt or copy at
+ *           https://www.boost.org/LICENSE_1_0.txt)
+ *)
 
 module Random = struct
 
@@ -86,13 +84,15 @@ module Random = struct
       if n land 0x80 = 0x80 then - (0xFF - n + 1) else n in
     let max = Array.length ba land lnot 0x3 in
     let rec doit i =
-      if i >= max then ()
+      if i >= max then
+        ()
       else
         let n = next_int Unit in
         for j = i to i + 3 do
           ba.(j) <- byte_of_int @@ (lsr) n @@ 8 * (j - i);
         done;
-        doit (i + 4) in
+        doit (i + 4)
+    in
     doit 0;
     if max >= Array.length ba then ba
     else begin

@@ -35,6 +35,10 @@ See also [test/random.ml](./test/random.ml) for examples of use.
 > dune runtest
 ```
 
+## Style Guide
+
+* [Jane Street Style Guide][]
+
 ## Contributing
 
 If you would like to help making this repository, take the following steps
@@ -55,4 +59,5 @@ If you would like to help making this repository, take the following steps
 [Build Status]: https://circleci.com/gh/r6eve/orandom.svg?style=svg
 [CI Results]: https://circleci.com/gh/r6eve/orandom
 [java.util.Random]: https://docs.oracle.com/javase/10/docs/api/java/util/Random.html
+[Jane Street Style Guide]: https://opensource.janestreet.com/standards/
 [r6eve]: https://github.com/r6eve
