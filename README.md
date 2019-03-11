@@ -2,7 +2,7 @@
 [![Build Status][]][CI Results]
 
 orandom is an OCaml library which acts partially like [java.util.Random][].
-You can check out the methods at lib/random.mli file.
+You can check out the methods at [lib/random.mli](./lib/random.mli) file.
 
 ## Usage
 
@@ -27,7 +27,7 @@ utop [4]: Random.next_boolean ();;
 - : bool = true
 ```
 
-See also test/random.ml for examples of use.
+See also [test/random.ml](./test/random.ml) for examples of use.
 
 ### Unit Testing
 
