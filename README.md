@@ -18,7 +18,7 @@ Then, you can use orandom on your machine.
 ```console
 > utop
 utop [0]: #require "orandom";;
-utop [1]: open Orandom.Random;;
+utop [1]: module Random = Orandom.Random;;
 utop [2]: Random.set_seed(0xA12EA88);;
 - : unit = ()
 utop [3]: Random.next_boolean ();;

@@ -1,8 +1,8 @@
 (executables
  (names random)
- (libraries orandom qcheck))
+ (libraries orandom oUnit))
 
 (alias
  (name runtest)
  (deps random.exe)
- (action (run %{deps} -q --color=always)))
+ (action (run %{deps})))
