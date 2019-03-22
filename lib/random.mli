@@ -11,13 +11,18 @@ module Ints : sig
   type elt = int
   (** The type of stream elements. *)
 
+  type size = int
+
+  type origin = elt
+  type bound = elt
+  (** [origin] is 0-based inclusive and [bound] is exclusive.
+      i.e. [origin, bound) *)
+
   type t =
     | Unit
-    | StreamSize of stream_size
-    | Range of range
-    | SandR of stream_size * range
-  and stream_size = int
-  and range = elt * elt  (* [origin, bound) *)
+    | StreamSize of { size: size }
+    | Range of { origin: origin; bound: bound }
+    | SandR of { size: size; origin: origin; bound: bound }
   (** The type of streams. *)
 end
 
@@ -25,13 +30,18 @@ module Floats : sig
   type elt = float
   (** The type of stream elements. *)
 
+  type size = int
+
+  type origin = elt
+  type bound = elt
+  (** [origin] is 0-based inclusive and [bound] is exclusive.
+      i.e. [origin, bound) *)
+
   type t =
     | Unit
-    | StreamSize of stream_size
-    | Range of range
-    | SandR of stream_size * range
-  and stream_size = int
-  and range = elt * elt  (* [origin, bound) *)
+    | StreamSize of { size: size }
+    | Range of { origin: origin; bound: bound }
+    | SandR of { size: size; origin: origin; bound: bound }
   (** The type of streams. *)
 end
 
