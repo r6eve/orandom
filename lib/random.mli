@@ -20,9 +20,9 @@ module Ints : sig
 
   type t =
     | Unit
-    | StreamSize of { size: size }
-    | Range of { origin: origin; bound: bound }
-    | SandR of { size: size; origin: origin; bound: bound }
+    | StreamSize of { size : size }
+    | Range of { origin : origin; bound : bound }
+    | SandR of { size : size; origin : origin; bound : bound }
   (** The type of streams. *)
 end
 
@@ -39,9 +39,9 @@ module Floats : sig
 
   type t =
     | Unit
-    | StreamSize of { size: size }
-    | Range of { origin: origin; bound: bound }
-    | SandR of { size: size; origin: origin; bound: bound }
+    | StreamSize of { size : size }
+    | Range of { origin : origin; bound : bound }
+    | SandR of { size : size; origin : origin; bound : bound }
   (** The type of streams. *)
 end
 

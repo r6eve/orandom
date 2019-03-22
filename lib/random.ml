@@ -17,9 +17,9 @@ module Ints = struct
 
   type t =
     | Unit
-    | StreamSize of { size: size }
-    | Range of { origin: origin; bound: bound }
-    | SandR of { size: size; origin: origin; bound: bound }
+    | StreamSize of { size : size }
+    | Range of { origin : origin; bound : bound }
+    | SandR of { size : size; origin : origin; bound : bound }
 end
 
 module Floats = struct
@@ -32,9 +32,9 @@ module Floats = struct
 
   type t =
     | Unit
-    | StreamSize of { size: size }
-    | Range of { origin: origin; bound: bound }
-    | SandR of { size: size; origin: origin; bound: bound }
+    | StreamSize of { size : size }
+    | Range of { origin : origin; bound : bound }
+    | SandR of { size : size; origin : origin; bound : bound }
 end
 
 let soil = 0x5DEECE66DL
