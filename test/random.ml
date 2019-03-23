@@ -189,13 +189,13 @@ let ints_stream_size _test_ctxt =
     ]
   in
   Random.set_seed random_seed;
-  let s = Random.ints (StreamSize 10) in
+  let s = Random.ints (StreamSize { size = 10 }) in
   let is_equal e = assert_equal e @@ Stream.next s in
   List.iter is_equal expected
 
 let ints_negative_stream_size _test_ctxt =
   try
-    ignore @@ Random.ints (StreamSize (-1));
+    ignore @@ Random.ints (StreamSize { size = -1 });
     assert_failure "ints_negative_stream_size"
   with
   | Invalid_argument _ -> ()
@@ -211,13 +211,13 @@ rnd.ints(1, 5).limit(10).forEach(e -> System.err.println(e));
 let ints_range _test_ctxt =
   let expected = [1; 3; 3; 3; 2; 4; 4; 4; 3; 2] in
   Random.set_seed random_seed;
-  let s = Random.ints (Range (1, 5)) in
+  let s = Random.ints (Range { origin = 1; bound = 5 }) in
   let is_equal e = assert_equal e @@ Stream.next s in
   List.iter is_equal expected
 
 let ints_invalid_range _test_ctxt =
   try
-    ignore @@ Random.ints (Range (1, 1));
+    ignore @@ Random.ints (Range { origin = 1; bound = 1 });
     assert_failure "ints_invalid_range"
   with
   | Invalid_argument _ -> ()
@@ -233,13 +233,13 @@ rnd.ints(10L, 1, 5).forEach(e -> System.err.println(e));
 let ints_stream_size_and_range _test_ctxt =
   let expected = [1; 3; 3; 3; 2; 4; 4; 4; 3; 2] in
   Random.set_seed random_seed;
-  let s = Random.ints (SandR (10, (1, 5))) in
+  let s = Random.ints (SandR { size = 10; origin = 1; bound = 5 }) in
   let is_equal e = assert_equal e @@ Stream.next s in
   List.iter is_equal expected
 
 let ints_negative_stream_size_and_range _test_ctxt =
   try
-    ignore @@ Random.ints (SandR (-1, (1, 5)));
+    ignore @@ Random.ints (SandR { size = -1; origin = 1; bound = 5 });
     assert_failure "ints_negative_stream_size_and_range"
   with
   | Invalid_argument _ -> ()
@@ -247,7 +247,7 @@ let ints_negative_stream_size_and_range _test_ctxt =
 
 let ints_stream_size_and_invalid_range _test_ctxt =
   try
-    ignore @@ Random.ints (SandR (10, (1, 1)));
+    ignore @@ Random.ints (SandR { size = 10; origin = 1; bound = 1 });
     assert_failure "ints_stream_size_and_invalid_range"
   with
   | Invalid_argument _ -> ()
@@ -302,14 +302,14 @@ let floats_stream_size _test_ctxt =
     ]
   in
   Random.set_seed random_seed;
-  let s = Random.floats (StreamSize 10) in
+  let s = Random.floats (StreamSize { size = 10 }) in
   let cmp a b = cmp_float ~epsilon a b in
   let is_equal e = assert_equal ~cmp e @@ Stream.next s in
   List.iter is_equal expected
 
 let floats_negative_stream_size _test_ctxt =
   try
-    ignore @@ Random.floats (StreamSize (-1));
+    ignore @@ Random.floats (StreamSize { size = -1 });
     assert_failure "floats_negative_stream_size"
   with
   | Invalid_argument _ -> ()
@@ -337,14 +337,14 @@ let floats_range _test_ctxt =
     ]
   in
   Random.set_seed random_seed;
-  let s = Random.floats (Range (1., 5.)) in
+  let s = Random.floats (Range { origin = 1.; bound = 5. }) in
   let cmp a b = cmp_float ~epsilon a b in
   let is_equal e = assert_equal ~cmp e @@ Stream.next s in
   List.iter is_equal expected
 
 let floats_invalid_range _test_ctxt =
   try
-    ignore @@ Random.floats (Range (1., 1.));
+    ignore @@ Random.floats (Range { origin = 1.; bound = 1. });
     assert_failure "floats_invalid_range"
   with
   | Invalid_argument _ -> ()
@@ -372,14 +372,14 @@ let floats_stream_size_and_range _test_ctxt =
     ]
   in
   Random.set_seed random_seed;
-  let s = Random.floats (SandR (10, (1., 5.))) in
+  let s = Random.floats (SandR { size = 10; origin = 1.; bound = 5. }) in
   let cmp a b = cmp_float ~epsilon a b in
   let is_equal e = assert_equal ~cmp e @@ Stream.next s in
   List.iter is_equal expected
 
 let floats_negative_stream_size_and_range _test_ctxt =
   try
-    ignore @@ Random.floats (SandR (-1, (1., 5.)));
+    ignore @@ Random.floats (SandR { size = -1; origin = 1.; bound = 5. });
     assert_failure "floats_negative_stream_size_and_range"
   with
   | Invalid_argument _ -> ()
@@ -387,7 +387,7 @@ let floats_negative_stream_size_and_range _test_ctxt =
 
 let floats_stream_size_and_invalid_range _test_ctxt =
   try
-    ignore @@ Random.floats (SandR (10, (1., 1.)));
+    ignore @@ Random.floats (SandR { size = 10; origin = 1.; bound = 1. });
     assert_failure "floats_stream_size_and_invalid_range"
   with
   | Invalid_argument _ -> ()
