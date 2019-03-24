@@ -35,6 +35,20 @@ See also [test/random.ml](./test/random.ml) for examples of use.
 > dune runtest
 ```
 
+### Manually testing
+
+I suggest `dune utop` that gives you REPL for local library.
+
+```console
+> dune utop
+utop [0]: module Random = Orandom.Random;;
+module Random = Orandom.Random
+utop [1]: Random.set_seed(0xA12EA88);;
+- : unit = ()
+utop [2]: Random.next_boolean ();;
+- : bool = false
+```
+
 ## Style Guide
 
 * [Jane Street Style Guide][]

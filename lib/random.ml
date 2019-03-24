@@ -58,7 +58,7 @@ let next bits =
   let lhs = I.of_int @@ 1 lsl 48 - 1 in
   let rhs = I.add 0xBL @@ I.mul soil !seed in
   seed := I.logand lhs rhs;
-  I.shift_right_logical !seed (48 - bits)
+  I.shift_right_logical !seed @@ 48 - bits
 
 let next_boolean () =
   not @@ Int64.equal 0L @@ next 1
@@ -80,7 +80,7 @@ let next_int = function
         v
       else
         let b = int_of_int64 @@ next 31 in
-        doit b (b mod n)
+        doit b @@ b mod n
     in
     (* Start from dummy. *)
     doit 0 n
