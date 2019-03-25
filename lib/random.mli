@@ -5,9 +5,36 @@
  *           https://www.boost.org/LICENSE_1_0.txt)
  *)
 
+val init : unit -> unit
+(** Create a new random number generator. *)
+
+val set_seed : int -> unit
+(** Set the seed of the random number generator using the given seed. *)
+
+val next_boolean : unit -> bool
+(** Return the next random, uniformly distributed boolean value. *)
+
+val next_bytes : int array -> int array
+(** Generate random bytes and place them into a user-supplied int array.
+    Note that the byte type in Java ranges from [-128, 127] but in OCaml [0, 255].
+    In order to make the results corresponding to Java, use int array instead
+    of bytes. *)
+
 type next_int_t = Unit | Bound of int
 
+val next_int : next_int_t -> int
+(** Same as [next_boolean] except return int value. If [bound] is given, return
+    int value between 0 (inclusive) and [bound] (exclusive). *)
+
+val next_float : unit -> float
+(** Same as [next_boolean] except return float value. *)
+
+val next_gaussian : unit -> float
+(** Return the next random, Gaussian (normally) distributed value with mean 0.0
+    and standard deviation 1.0. *)
+
 module Ints : sig
+
   type elt = int
   (** The type of stream elements. *)
 
@@ -24,9 +51,14 @@ module Ints : sig
     | Range of { origin : origin; bound : bound }
     | SandR of { size : size; origin : origin; bound : bound }
   (** The type of streams. *)
+
 end
 
+val ints : Ints.t -> int Stream.t
+(** Return an effectively unlimited stream of random int values. *)
+
 module Floats : sig
+
   type elt = float
   (** The type of stream elements. *)
 
@@ -43,36 +75,8 @@ module Floats : sig
     | Range of { origin : origin; bound : bound }
     | SandR of { size : size; origin : origin; bound : bound }
   (** The type of streams. *)
+
 end
-
-val init : unit -> unit
-(** Create a new random number generator. *)
-
-val set_seed : int -> unit
-(** Set the seed of the random number generator using the given seed. *)
-
-val next_boolean : unit -> bool
-(** Return the next random, uniformly distributed boolean value. *)
-
-val next_bytes : int array -> int array
-(** Generate random bytes and place them into a user-supplied int array.
-    Note that the byte type in Java ranges from [-128, 127] but in OCaml [0, 255].
-    In order to make the results corresponding to Java, use int array instead
-    of bytes. *)
-
-val next_int : next_int_t -> int
-(** Same as [next_boolean] except return int value. If [bound] is given, return
-    int value between 0 (inclusive) and [bound] (exclusive). *)
-
-val next_float : unit -> float
-(** Same as [next_boolean] except return float value. *)
-
-val next_gaussian : unit -> float
-(** Return the next random, Gaussian (normally) distributed value with mean 0.0
-    and standard deviation 1.0. *)
-
-val ints : Ints.t -> int Stream.t
-(** Return an effectively unlimited stream of random int values. *)
 
 val floats : Floats.t -> float Stream.t
 (** Same as [ints] except return float values. *)

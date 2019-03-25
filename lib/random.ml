@@ -5,38 +5,6 @@
  *           https://www.boost.org/LICENSE_1_0.txt)
  *)
 
-type next_int_t = Unit | Bound of int
-
-module Ints = struct
-  type elt = int
-
-  type size = int
-
-  type origin = elt
-  type bound = elt
-
-  type t =
-    | Unit
-    | StreamSize of { size : size }
-    | Range of { origin : origin; bound : bound }
-    | SandR of { size : size; origin : origin; bound : bound }
-end
-
-module Floats = struct
-  type elt = float
-
-  type size = int
-
-  type origin = elt
-  type bound = elt
-
-  type t =
-    | Unit
-    | StreamSize of { size : size }
-    | Range of { origin : origin; bound : bound }
-    | SandR of { size : size; origin : origin; bound : bound }
-end
-
 let soil = 0x5DEECE66DL
 
 let seed = ref 0L
@@ -66,6 +34,8 @@ let next_boolean () =
 let int_of_int64 n =
   (* Bit trick for built-in [int] type. *)
   Int32.to_int @@ Int64.to_int32 n
+
+type next_int_t = Unit | Bound of int
 
 let next_int = function
   | Unit -> int_of_int64 @@ next 32
@@ -140,21 +110,41 @@ let next_gaussian () =
     next_gaussian := Some (z *. norm);
     y *. norm
 
-let next_range_ints origin bound =
-  next_int (Bound (bound - origin)) + origin
+module Ints = struct
+
+  type elt = int
+
+  type size = int
+
+  type origin = elt
+  type bound = elt
+
+  type t =
+    | Unit
+    | StreamSize of { size : size }
+    | Range of { origin : origin; bound : bound }
+    | SandR of { size : size; origin : origin; bound : bound }
+
+  let next_val () =
+    next_int Unit
+
+  let next_range origin bound =
+    next_int (Bound (bound - origin)) + origin
+
+end
 
 let ints = function
-  | Ints.Unit -> Stream.from @@ fun _ -> Some (next_int Unit)
+  | Ints.Unit -> Stream.from @@ fun _ -> Some (Ints.next_val ())
 
   | Ints.StreamSize { size } when size <= 0 ->
     invalid_arg "[stream_size] must be positive."
   | Ints.StreamSize { size } ->
-    Stream.from @@ fun n -> if n = size then None else Some (next_int Unit)
+    Stream.from @@ fun n -> if n = size then None else Some (Ints.next_val ())
 
   | Ints.Range { origin; bound } when origin >= bound ->
     invalid_arg "[bound] must be greater than [origin]."
   | Ints.Range { origin; bound } ->
-    Stream.from @@ fun _ -> Some (next_range_ints origin bound)
+    Stream.from @@ fun _ -> Some (Ints.next_range origin bound)
 
   | Ints.SandR { size; _ } when size <= 0 ->
     invalid_arg "[stream_size] must be positive."
@@ -162,24 +152,44 @@ let ints = function
     invalid_arg "[bound] must be greater than [origin]."
   | Ints.SandR { size; origin; bound } ->
     Stream.from @@ fun n ->
-      if n = size then None else Some (next_range_ints origin bound)
+      if n = size then None else Some (Ints.next_range origin bound)
 
-let next_range_floats origin bound =
-  let f = next_float () *. (bound -. origin) +. origin in
-  if f < bound then f else bound -. 1.
+module Floats = struct
+
+  type elt = float
+
+  type size = int
+
+  type origin = elt
+  type bound = elt
+
+  type t =
+    | Unit
+    | StreamSize of { size : size }
+    | Range of { origin : origin; bound : bound }
+    | SandR of { size : size; origin : origin; bound : bound }
+
+  let next_val () =
+    next_float ()
+
+  let next_range origin bound =
+    let f = next_float () *. (bound -. origin) +. origin in
+    if f < bound then f else bound -. 1.
+
+end
 
 let floats = function
-  | Floats.Unit -> Stream.from @@ fun _ -> Some (next_float ())
+  | Floats.Unit -> Stream.from @@ fun _ -> Some (Floats.next_val ())
 
   | Floats.StreamSize { size } when size <= 0 ->
     invalid_arg "[stream_size] must be positive."
   | Floats.StreamSize { size } ->
-    Stream.from @@ fun n -> if n = size then None else Some (next_float ())
+    Stream.from @@ fun n -> if n = size then None else Some (Floats.next_val ())
 
   | Floats.Range { origin; bound } when origin >= bound ->
     invalid_arg "[bound] must be greater than [origin]."
   | Floats.Range { origin; bound } ->
-    Stream.from @@ fun _ -> Some (next_range_floats origin bound)
+    Stream.from @@ fun _ -> Some (Floats.next_range origin bound)
 
   | Floats.SandR { size; _ } when size <= 0 ->
     invalid_arg "[stream_size] must be positive."
@@ -187,4 +197,4 @@ let floats = function
     invalid_arg "[bound] must be greater than [origin]."
   | Floats.SandR { size; origin; bound} ->
     Stream.from @@ fun n ->
-      if n = size then None else Some (next_range_floats origin bound)
+      if n = size then None else Some (Floats.next_range origin bound)
