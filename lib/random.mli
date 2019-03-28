@@ -20,9 +20,11 @@ val next_bytes : int array -> int array
     In order to make the results corresponding to Java, use int array instead
     of bytes. *)
 
-type next_int_t = Unit | Bound of int
+module NextInt : sig
+  type t = Unit | Bound of int
+end
 
-val next_int : next_int_t -> int
+val next_int : NextInt.t -> int
 (** Same as [next_boolean] except return int value. If [bound] is given, return
     int value between 0 (inclusive) and [bound] (exclusive). *)
 

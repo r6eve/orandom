@@ -35,16 +35,18 @@ let int_of_int64 n =
   (* Bit trick for built-in [int] type. *)
   Int32.to_int @@ Int64.to_int32 n
 
-type next_int_t = Unit | Bound of int
+module NextInt = struct
+  type t = Unit | Bound of int
+end
 
 let next_int = function
-  | Unit -> int_of_int64 @@ next 32
-  | Bound n when n <= 0 -> invalid_arg "[bound] must be positive."
+  | NextInt.Unit -> int_of_int64 @@ next 32
+  | NextInt.Bound n when n <= 0 -> invalid_arg "[bound] must be positive."
   (* [n] is 0 or 1 or power of 2 *)
-  | Bound n when n land -n = n ->
+  | NextInt.Bound n when n land -n = n ->
     let lhs = Int64.mul (Int64.of_int n) @@ next 31 in
     int_of_int64 @@ Int64.shift_right_logical lhs 31
-  | Bound n ->
+  | NextInt.Bound n ->
     let rec doit b v =
       if b - v + n - 1 >= 0 then
         v
