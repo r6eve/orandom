@@ -36,7 +36,6 @@ val next_gaussian : unit -> float
     and standard deviation 1.0. *)
 
 module Ints : sig
-
   type elt = int
   (** The type of stream elements. *)
 
@@ -53,14 +52,12 @@ module Ints : sig
     | Range of { origin : origin; bound : bound }
     | SandR of { size : size; origin : origin; bound : bound }
   (** The type of streams. *)
-
 end
 
 val ints : Ints.t -> int Stream.t
 (** Return an effectively unlimited stream of random int values. *)
 
 module Floats : sig
-
   type elt = float
   (** The type of stream elements. *)
 
@@ -77,7 +74,6 @@ module Floats : sig
     | Range of { origin : origin; bound : bound }
     | SandR of { size : size; origin : origin; bound : bound }
   (** The type of streams. *)
-
 end
 
 val floats : Floats.t -> float Stream.t

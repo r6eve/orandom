@@ -37,25 +37,27 @@ let int_of_int64 n =
 
 module NextInt = struct
   type t = Unit | Bound of int
+
+  let next_int = function
+    | Unit -> int_of_int64 @@ next 32
+    | Bound n when n <= 0 -> invalid_arg "[bound] must be positive."
+    (* [n] is 0 or 1 or power of 2 *)
+    | Bound n when n land -n = n ->
+      let lhs = Int64.mul (Int64.of_int n) @@ next 31 in
+      int_of_int64 @@ Int64.shift_right_logical lhs 31
+    | Bound n ->
+      let rec doit b v =
+        if b - v + n - 1 >= 0 then
+          v
+        else
+          let b = int_of_int64 @@ next 31 in
+          doit b @@ b mod n
+      in
+      (* Start from dummy. *)
+      doit 0 n
 end
 
-let next_int = function
-  | NextInt.Unit -> int_of_int64 @@ next 32
-  | NextInt.Bound n when n <= 0 -> invalid_arg "[bound] must be positive."
-  (* [n] is 0 or 1 or power of 2 *)
-  | NextInt.Bound n when n land -n = n ->
-    let lhs = Int64.mul (Int64.of_int n) @@ next 31 in
-    int_of_int64 @@ Int64.shift_right_logical lhs 31
-  | NextInt.Bound n ->
-    let rec doit b v =
-      if b - v + n - 1 >= 0 then
-        v
-      else
-        let b = int_of_int64 @@ next 31 in
-        doit b @@ b mod n
-    in
-    (* Start from dummy. *)
-    doit 0 n
+let next_int x = NextInt.next_int x
 
 let next_bytes ba =
   let byte_of_int i =
@@ -112,53 +114,14 @@ let next_gaussian () =
     next_gaussian := Some (z *. norm);
     y *. norm
 
-module Ints = struct
-
-  type elt = int
-
-  type size = int
-
-  type origin = elt
-  type bound = elt
-
-  type t =
-    | Unit
-    | StreamSize of { size : size }
-    | Range of { origin : origin; bound : bound }
-    | SandR of { size : size; origin : origin; bound : bound }
-
-  let next_val () =
-    next_int Unit
-
-  let next_range origin bound =
-    next_int (Bound (bound - origin)) + origin
-
+module type Streamable = sig
+  type elt
+  val next_val : unit -> elt
+  val next_range : elt -> elt -> elt
 end
 
-let ints = function
-  | Ints.Unit -> Stream.from @@ fun _ -> Some (Ints.next_val ())
-
-  | Ints.StreamSize { size } when size <= 0 ->
-    invalid_arg "[stream_size] must be positive."
-  | Ints.StreamSize { size } ->
-    Stream.from @@ fun n -> if n = size then None else Some (Ints.next_val ())
-
-  | Ints.Range { origin; bound } when origin >= bound ->
-    invalid_arg "[bound] must be greater than [origin]."
-  | Ints.Range { origin; bound } ->
-    Stream.from @@ fun _ -> Some (Ints.next_range origin bound)
-
-  | Ints.SandR { size; _ } when size <= 0 ->
-    invalid_arg "[stream_size] must be positive."
-  | Ints.SandR { origin; bound; _ } when origin >= bound ->
-    invalid_arg "[bound] must be greater than [origin]."
-  | Ints.SandR { size; origin; bound } ->
-    Stream.from @@ fun n ->
-      if n = size then None else Some (Ints.next_range origin bound)
-
-module Floats = struct
-
-  type elt = float
+module Make_stream(M : Streamable) = struct
+  type elt = M.elt
 
   type size = int
 
@@ -171,32 +134,47 @@ module Floats = struct
     | Range of { origin : origin; bound : bound }
     | SandR of { size : size; origin : origin; bound : bound }
 
-  let next_val () =
-    next_float ()
+  let next_val () = M.next_val ()
 
+  let next_range origin bound = M.next_range origin bound
+
+  let stream = function
+    | Unit -> Stream.from @@ fun _ -> Some (next_val ())
+
+    | StreamSize { size } when size <= 0 ->
+      invalid_arg "[stream_size] must be positive."
+    | StreamSize { size } ->
+      Stream.from @@ fun n -> if n = size then None else Some (next_val ())
+
+    | Range { origin; bound } when origin >= bound ->
+      invalid_arg "[bound] must be greater than [origin]."
+    | Range { origin; bound } ->
+      Stream.from @@ fun _ -> Some (next_range origin bound)
+
+    | SandR { size; _ } when size <= 0 ->
+      invalid_arg "[stream_size] must be positive."
+    | SandR { origin; bound; _ } when origin >= bound ->
+      invalid_arg "[bound] must be greater than [origin]."
+    | SandR { size; origin; bound } ->
+      Stream.from @@ fun n ->
+        if n = size then None else Some (next_range origin bound)
+end
+
+module Ints = Make_stream(struct
+  type elt = int
+  let next_val () = next_int Unit
+  let next_range origin bound =
+    next_int (Bound (bound - origin)) + origin
+end)
+
+let ints x = Ints.stream x
+
+module Floats = Make_stream(struct
+  type elt = float
+  let next_val () = next_float ()
   let next_range origin bound =
     let f = next_float () *. (bound -. origin) +. origin in
     if f < bound then f else bound -. 1.
+end)
 
-end
-
-let floats = function
-  | Floats.Unit -> Stream.from @@ fun _ -> Some (Floats.next_val ())
-
-  | Floats.StreamSize { size } when size <= 0 ->
-    invalid_arg "[stream_size] must be positive."
-  | Floats.StreamSize { size } ->
-    Stream.from @@ fun n -> if n = size then None else Some (Floats.next_val ())
-
-  | Floats.Range { origin; bound } when origin >= bound ->
-    invalid_arg "[bound] must be greater than [origin]."
-  | Floats.Range { origin; bound } ->
-    Stream.from @@ fun _ -> Some (Floats.next_range origin bound)
-
-  | Floats.SandR { size; _ } when size <= 0 ->
-    invalid_arg "[stream_size] must be positive."
-  | Floats.SandR { origin; bound; _ } when origin >= bound ->
-    invalid_arg "[bound] must be greater than [origin]."
-  | Floats.SandR { size; origin; bound} ->
-    Stream.from @@ fun n ->
-      if n = size then None else Some (Floats.next_range origin bound)
+let floats x = Floats.stream x
