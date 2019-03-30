@@ -20,9 +20,11 @@ val next_bytes : int array -> int array
     In order to make the results corresponding to Java, use int array instead
     of bytes. *)
 
-type next_int_t = Unit | Bound of int
+module NextInt : sig
+  type t = Unit | Bound of int
+end
 
-val next_int : next_int_t -> int
+val next_int : NextInt.t -> int
 (** Same as [next_boolean] except return int value. If [bound] is given, return
     int value between 0 (inclusive) and [bound] (exclusive). *)
 
@@ -34,7 +36,6 @@ val next_gaussian : unit -> float
     and standard deviation 1.0. *)
 
 module Ints : sig
-
   type elt = int
   (** The type of stream elements. *)
 
@@ -51,14 +52,12 @@ module Ints : sig
     | Range of { origin : origin; bound : bound }
     | SandR of { size : size; origin : origin; bound : bound }
   (** The type of streams. *)
-
 end
 
 val ints : Ints.t -> int Stream.t
 (** Return an effectively unlimited stream of random int values. *)
 
 module Floats : sig
-
   type elt = float
   (** The type of stream elements. *)
 
@@ -75,7 +74,6 @@ module Floats : sig
     | Range of { origin : origin; bound : bound }
     | SandR of { size : size; origin : origin; bound : bound }
   (** The type of streams. *)
-
 end
 
 val floats : Floats.t -> float Stream.t
