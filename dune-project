@@ -1,3 +1,3 @@
 (lang dune 1.6)
 (name orandom)
-(version 0.1.1)
+(version 1.0.0)
