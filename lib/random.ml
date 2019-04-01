@@ -116,8 +116,8 @@ let next_gaussian () =
 
 module type Streamable = sig
   type elt
-  val next_val : unit -> elt
-  val next_range : elt -> elt -> elt
+  val next : unit -> elt
+  val next_bound : elt -> elt -> elt
 end
 
 module Make_stream(M : Streamable) = struct
@@ -131,22 +131,22 @@ module Make_stream(M : Streamable) = struct
     | Range of { origin : elt; bound : elt }
     | SandR of { size : size; origin : elt; bound : elt }
 
-  let next_val () = M.next_val ()
+  let next () = M.next ()
 
-  let next_range origin bound = M.next_range origin bound
+  let next_bound origin bound = M.next_bound origin bound
 
   let stream = function
-    | Unit -> Stream.from @@ fun _ -> Some (next_val ())
+    | Unit -> Stream.from @@ fun _ -> Some (next ())
 
     | StreamSize { size } when size <= 0 ->
       invalid_arg "[stream_size] must be positive."
     | StreamSize { size } ->
-      Stream.from @@ fun n -> if n = size then None else Some (next_val ())
+      Stream.from @@ fun n -> if n = size then None else Some (next ())
 
     | Range { origin; bound } when origin >= bound ->
       invalid_arg "[bound] must be greater than [origin]."
     | Range { origin; bound } ->
-      Stream.from @@ fun _ -> Some (next_range origin bound)
+      Stream.from @@ fun _ -> Some (next_bound origin bound)
 
     | SandR { size; _ } when size <= 0 ->
       invalid_arg "[stream_size] must be positive."
@@ -154,13 +154,13 @@ module Make_stream(M : Streamable) = struct
       invalid_arg "[bound] must be greater than [origin]."
     | SandR { size; origin; bound } ->
       Stream.from @@ fun n ->
-        if n = size then None else Some (next_range origin bound)
+        if n = size then None else Some (next_bound origin bound)
 end
 
 module Ints = Make_stream(struct
   type elt = int
-  let next_val () = next_int Unit
-  let next_range origin bound =
+  let next () = next_int Unit
+  let next_bound origin bound =
     next_int (Bound (bound - origin)) + origin
 end)
 
@@ -168,8 +168,8 @@ let ints x = Ints.stream x
 
 module Floats = Make_stream(struct
   type elt = float
-  let next_val () = next_float ()
-  let next_range origin bound =
+  let next () = next_float ()
+  let next_bound origin bound =
     let f = next_float () *. (bound -. origin) +. origin in
     if f < bound then f else bound -. 1.
 end)
