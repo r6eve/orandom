@@ -41,17 +41,13 @@ module Ints : sig
 
   type size = int
 
-  type origin = elt
-  type bound = elt
-  (** [origin] is 0-based inclusive and [bound] is exclusive.
-      i.e. [origin, bound) *)
-
   type t =
     | Unit
     | StreamSize of { size : size }
-    | Range of { origin : origin; bound : bound }
-    | SandR of { size : size; origin : origin; bound : bound }
-  (** The type of streams. *)
+    | Range of { origin : elt; bound : elt }
+    | SandR of { size : size; origin : elt; bound : elt }
+  (** The type of streams. [origin] is 0-based inclusive and [bound] is
+      exclusive. i.e. [origin, bound)*)
 end
 
 val ints : Ints.t -> int Stream.t
@@ -63,17 +59,13 @@ module Floats : sig
 
   type size = int
 
-  type origin = elt
-  type bound = elt
-  (** [origin] is 0-based inclusive and [bound] is exclusive.
-      i.e. [origin, bound) *)
-
   type t =
     | Unit
     | StreamSize of { size : size }
-    | Range of { origin : origin; bound : bound }
-    | SandR of { size : size; origin : origin; bound : bound }
-  (** The type of streams. *)
+    | Range of { origin : elt; bound : elt }
+    | SandR of { size : size; origin : elt; bound : elt }
+  (** The type of streams. [origin] is 0-based inclusive and [bound] is
+      exclusive. i.e. [origin, bound)*)
 end
 
 val floats : Floats.t -> float Stream.t
