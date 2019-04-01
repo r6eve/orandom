@@ -125,14 +125,11 @@ module Make_stream(M : Streamable) = struct
 
   type size = int
 
-  type origin = elt
-  type bound = elt
-
   type t =
     | Unit
     | StreamSize of { size : size }
-    | Range of { origin : origin; bound : bound }
-    | SandR of { size : size; origin : origin; bound : bound }
+    | Range of { origin : elt; bound : elt }
+    | SandR of { size : size; origin : elt; bound : elt }
 
   let next_val () = M.next_val ()
 
