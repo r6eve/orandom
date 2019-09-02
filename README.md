@@ -55,7 +55,7 @@ utop [2]: Random.next_boolean ();;
 
 ## Contributing
 
-If you would like to help making this repository, take the following steps
+If you would like to help make this repository, take the following steps
 (it's just guidelines, not rules).
 
 1. Fork this repository: https://github.com/r6eve/orandom/fork
