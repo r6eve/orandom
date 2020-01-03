@@ -70,8 +70,8 @@ If you would like to help make this repository, take the following steps
 - [r6eve][] - Neat
 
 
-[Build Status]: https://circleci.com/gh/r6eve/orandom.svg?style=svg
-[CI Results]: https://circleci.com/gh/r6eve/orandom
+[Build Status]: https://github.com/r6eve/orandom/workflows/main/badge.svg
+[CI Results]: https://github.com/r6eve/orandom/actions
 [java.util.Random]: https://docs.oracle.com/javase/10/docs/api/java/util/Random.html
 [Jane Street Style Guide]: https://opensource.janestreet.com/standards/
 [r6eve]: https://github.com/r6eve
